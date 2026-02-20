@@ -450,6 +450,28 @@
     @media (max-width: 480px) {
       .gold-bar-inner { grid-template-columns: repeat(2,1fr); gap: 0.6rem; }
     }
+
+    /* ── Conference pagination ──────────────────────────────────────── */
+    .conf-item { display: none; }
+    .conf-item.visible { display: block; }
+    .conf-pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.6rem; margin-top: 2rem; flex-wrap: wrap;
+    }
+    .conf-pg-btn {
+      background: none; border: 1px solid var(--gray-300);
+      border-radius: 6px; padding: 0.4rem 0.85rem;
+      font-family: 'Inter', sans-serif; font-size: 0.8rem;
+      font-weight: 600; color: var(--navy-mid); cursor: pointer;
+      transition: var(--ease);
+    }
+    .conf-pg-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--navy); }
+    .conf-pg-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .conf-pg-btn:disabled { opacity: 0.35; cursor: default; }
+    .conf-pg-info {
+      font-size: 0.78rem; color: var(--gray-500);
+      padding: 0 0.4rem;
+    }
   </style>
 </head>
 <body>
@@ -629,7 +651,7 @@
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab(event,'pubs-journal')">Peer-Reviewed Articles</button>
       <button class="tab-btn" onclick="switchTab(event,'pubs-chapters')">Book Chapters</button>
-      <button class="tab-btn" onclick="switchTab(event,'pubs-conf')">Selected Conferences</button>
+      <button class="tab-btn" onclick="switchTab(event,'pubs-conf')">Conference Presentations</button>
     </div>
 
     <!-- JOURNAL ARTICLES -->
@@ -861,93 +883,282 @@
 
     <!-- CONFERENCES -->
     <div id="pubs-conf" class="tab-pane">
-      <div class="pub-list reveal">
+      <div class="pub-list reveal" id="conf-list">
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
           <div class="pub-year">September 2025 · EUPRERA Congress, Lund, Sweden</div>
           <div class="pub-title">How companies communicate social responsibility, impact, and purpose: Evidence from top S&amp;P 500 companies' communications</div>
           <div class="pub-authors">Xu, S., Chang, B., &amp; Kim, K.</div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
           <div class="pub-year">June 2025 · ICA, Denver, CO — Public Relations Division</div>
           <div class="pub-title">Implications of intergroup dynamics on organization-public outcomes: An identity and intergroup perspective</div>
           <div class="pub-authors">Xu, S.</div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
           <div class="pub-year">June 2025 · ICA, Denver, CO — Public Relations Division</div>
           <div class="pub-title">Consolidating CSR and CSA quantitative research in public relations through a network analysis of theoretical variables</div>
           <div class="pub-authors">Xu, S., &amp; Luttman, S.</div>
         </div>
 
-        <div class="pub-card">
-          <div class="pub-year">August 2024 · AEJMC, Philadelphia, PA</div>
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2024 · AEJMC, Philadelphia, PA — Communicating Science, Health, Environment, Risk Division</div>
           <div class="pub-title">Convergence and social media use in risk perception: An investigation on both central tendency and dispersion</div>
           <div class="pub-authors">Xu, S., &amp; Zhao, X.</div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
           <div class="pub-year">June 2024 · ICA, Gold Coast, Australia — Public Relations Division</div>
           <div class="pub-title">Stakeholder analysis for strategic communication: Using computational text analysis of qualitative data</div>
           <div class="pub-authors">Xu, S.</div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2023 · AEJMC, Washington D.C. — Public Relations Division</div>
+          <div class="pub-title">How political ideology affects the communication of organizational relations: A social network approach</div>
+          <div class="pub-authors">You, L., Zhao, X., &amp; Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2023 · ICA, Toronto, Canada — Computational Methods Division</div>
+          <div class="pub-title">A temporal approach to online discussion during disasters: Applying SIR infectious disease model to predict topic growth and examining effects of temporal distance</div>
+          <div class="pub-authors">Xu, S., Zhao, X., &amp; Chen, J.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">March 2023 · International Public Relations Research Conference, Orlando, FL</div>
+          <div class="pub-title">Keeping employees during the great resignation: The impact of leadership communication on newcomer adjustment, well-being, and employee-organization relationships</div>
+          <div class="pub-authors">Cen, Y., Xu, S., Wei, T., &amp; Huang, V.</div>
+        </div>
+
+        <div class="pub-card conf-item">
           <div class="pub-year">November 2022 · NCA, New Orleans, LA — Public Relations Division</div>
           <div class="pub-title">Connecting issues, CSR, and OPRs: Unpacking identity mediators of the effect of CSR on relationship and the moderating role of intergroup dynamics</div>
           <div class="pub-authors">Xu, S.</div>
           <div><span class="pub-badge">★ 2nd Place Top Faculty Paper Award — NCA PR Division</span></div>
         </div>
 
-        <div class="pub-card">
-          <div class="pub-year">May 2022 · ICA, Paris, France</div>
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2022 · ICA, Paris, France — Mass Communication Division</div>
           <div class="pub-title">Who influences whom? Time series analysis on COVID digital news coverage, tweets volume, and crisis severity</div>
           <div class="pub-authors">Xu, S., &amp; Cen, Y.</div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2022 · ICA, Paris, France — Information Systems Division</div>
+          <div class="pub-title">How information repertoire affects vaccine hesitancy: Processes of information verification and cognitive elaboration</div>
+          <div class="pub-authors">Zhao, X., Ma, Z., Xu, S., &amp; Austin, L.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2022 · ICA, Paris, France — Mass Communication Division</div>
+          <div class="pub-title">Medium and source convergence in crisis information acquisition: Patterns, antecedents, and outcomes</div>
+          <div class="pub-authors">Zhao, X., Xu, S., &amp; Austin, L.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2021 · NCA, Seattle, WA — Mass Communication Division</div>
+          <div class="pub-title">An ecological and dynamic convergence framework for disaster and emergency communication</div>
+          <div class="pub-authors">Xu, S., &amp; Zhao, X.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">September 2021 · IEEE ISPA-BDCloud-SocialCom-SustainCom</div>
+          <div class="pub-title">Using content analysis and machine learning to identify COVID-19 information relevant to low-income households on social media</div>
+          <div class="pub-authors">Khanal, S., Refati, R., Glandt, K., Caragea, D., Xu, S., &amp; Chen, C. F.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2021 · AEJMC, New Orleans, LA — Communicating Science, Health, Environment, Risk Division</div>
+          <div class="pub-title">Embedded contexts and multilayered interactions: User comments and interactions analysis on YouTube related to climate change</div>
+          <div class="pub-authors">Xu, S., Kochigina, A., &amp; Luttman, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2021 · ICA, Denver, CO — Organizational Communication Division</div>
+          <div class="pub-title">Key players in CSR institutionalization: An interorganizational network investigation through Fortune Global 500 companies' CSR reports</div>
+          <div class="pub-authors">Xu, S., &amp; Woo, D. J.</div>
+        </div>
+
+        <div class="pub-card conf-item">
           <div class="pub-year">May 2021 · ICA, Denver, CO — Public Relations Division</div>
           <div class="pub-title">Is mediated dialogue dead yet? How media affordances affect organization-public relationship building</div>
           <div class="pub-authors">Zhou, Y., &amp; Xu, S.</div>
           <div><span class="pub-badge">★ Top Faculty Paper — ICA PR Division</span></div>
         </div>
 
-        <div class="pub-card">
-          <div class="pub-year">May 2021 · ICA, Denver, CO — Organizational Communication Division</div>
-          <div class="pub-title">Key players in CSR institutionalization: An interorganizational network investigation through Fortune Global 500 companies' CSR reports</div>
-          <div class="pub-authors">Xu, S., &amp; Woo, D. J.</div>
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2021 · ICA, Denver, CO — Public Relations Division</div>
+          <div class="pub-title">Motivated responsibility attribution in pandemic: An integrated framework of antecedents, processes and outcomes</div>
+          <div class="pub-authors">Zhao, X., Tsang, S. J., &amp; Xu, S.</div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2020 · AEJMC, San Francisco, CA — Public Relations Division</div>
+          <div class="pub-title">Effects of narratives on individuals' skepticism toward corporate social responsibility efforts</div>
+          <div class="pub-authors">Xu, S., &amp; Kochigina, A.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2020 · AEJMC, San Francisco, CA — Public Relations Division</div>
+          <div class="pub-title">CEO activism &amp; employee relations: Factors affecting employees' sense of belonging in workplace</div>
+          <div class="pub-authors">Cho, M., Xu, S., &amp; Boatwright, B.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">July 2020 · Sunbelt Conference, INSNA, Paris, France</div>
+          <div class="pub-title">Seeking like-minded people: Twitter users' homophily based on ideological hashtags</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2020 · ICA, Gold Coast, Australia — Environmental Communication Division</div>
+          <div class="pub-title">Networked publics in #NoDAPL protests: Interactions among activist publics and influence of locality and proximity on socially mediated networks</div>
+          <div class="pub-authors">Xu, S., &amp; Luttman, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2020 · ICA, Gold Coast, Australia — Public Relations Division</div>
+          <div class="pub-title">Threat and consumer behavior: Effects of threat on consumers' engagement with corporate social responsibility</div>
+          <div class="pub-authors">Xu, S., &amp; Cho, M.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2020 · ICA, Gold Coast, Australia — Public Relations Division</div>
+          <div class="pub-title">Is telling a story better? Effects of narrative engagement on CSR skepticism</div>
+          <div class="pub-authors">Kochigina, A., &amp; Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2019 · NCA, Baltimore, MD — Public Relations Division</div>
+          <div class="pub-title">A topic modeling approach to examining Twitter users' discourses and reactions to cause-related marketing</div>
+          <div class="pub-authors">Xu, S., &amp; Xiong, Y.</div>
+        </div>
+
+        <div class="pub-card conf-item">
           <div class="pub-year">May 2019 · ICA, Washington, D.C. — Public Relations Division</div>
           <div class="pub-title">Remaking dialogic principles for the digital Age: The role of affordances in dialogue and engagement</div>
           <div class="pub-authors">Zhou, A. Y., &amp; Xu, S.</div>
           <div><span class="pub-badge">★ Top Faculty Paper — ICA PR Division</span></div>
         </div>
 
-        <div class="pub-card">
-          <div class="pub-year">May 2017 · ICA, San Diego, CA — Public Relations Division</div>
-          <div class="pub-title">Discourse of renewal: Developing multiple-item measurement and analyzing effects on relationships</div>
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2019 · ICA, Washington, D.C. — Public Relations Division</div>
+          <div class="pub-title">Issues, identity salience, and organization-public interactions: An identity-based approach</div>
           <div class="pub-authors">Xu, S.</div>
-          <div><span class="pub-badge">★ 1st Place Top Student Paper — ICA PR Division</span></div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
+          <div class="pub-year">March 2019 · International Public Relations Research Conference, Orlando, FL</div>
+          <div class="pub-title">When environmental issues are political: Effects of political identity salience and organization's environmental communication on public engagement</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
           <div class="pub-year">November 2018 · NCA, Salt Lake City, UT — Public Relations Division</div>
           <div class="pub-title">Bigger playground, better dialogues? A large-scale examination of corporate Twitter communication in the 280-character era</div>
           <div class="pub-authors">Zhou, A. Y., &amp; Xu, S.</div>
           <div><span class="pub-badge">★ 1st Place Top Student Paper — NCA PR Division</span></div>
         </div>
 
-        <div class="pub-card">
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2018 · ICA, Prague, Czech Republic — Public Relations Division</div>
+          <div class="pub-title">Catching up on crisis: Effects of crisis attributes on emotions and information channel preferences</div>
+          <div class="pub-authors">Xu, S., &amp; Yue, C.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2018 · ICA, Prague, Czech Republic — Public Relations Division</div>
+          <div class="pub-title">Crisis communication within a community: Bonding, coping, and making sense together</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2017 · NCA, Dallas, TX — Interpersonal Communication Division</div>
+          <div class="pub-title">Questioning my love is questioning my face: An analysis of facework strategies by interracial and interethnic couples in Taiwan</div>
+          <div class="pub-authors">Chien, H. Y., &amp; Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2017 · ICA, San Diego, CA — Public Relations Division</div>
+          <div class="pub-title">We won't if you won't damage the relationship: The investment model in organizational crises for (re)building relationships</div>
+          <div class="pub-authors">Xu, S.</div>
+          <div><span class="pub-badge">★ Top Student Paper — ICA PR Division</span></div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2017 · ICA, San Diego, CA — Public Relations Division</div>
+          <div class="pub-title">Discourse of renewal: Developing multiple-item measurement and analyzing effects on relationships</div>
+          <div class="pub-authors">Xu, S.</div>
+          <div><span class="pub-badge">★ 1st Place Top Student Paper — ICA PR Division</span></div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2016 · NCA, Philadelphia, PA — Public Relations Division</div>
+          <div class="pub-title">When identity becomes salient and connected to the organization: We are in this together</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2016 · NCA, Philadelphia, PA</div>
+          <div class="pub-title">Making a "difference" with digital media? The evaluation perspectives, practices, and challenges of Chinese NGOs</div>
+          <div class="pub-authors">Sommerfeldt, E. J., &amp; Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2016 · AEJMC, Minneapolis, MN</div>
+          <div class="pub-title">Empowering the future practitioner: Postmodernism in the undergraduate public relations classroom</div>
+          <div class="pub-authors">Madden, S., Brown, K., &amp; Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">April 2016 · Eastern Communication Association, Baltimore, MD — Organizational Communication Interest Group</div>
+          <div class="pub-title">A societal turn for organizations: Unpacking societal dimensions of public relations strategy</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
           <div class="pub-year">November 2015 · NCA, Las Vegas, NV — Public Relations Division</div>
           <div class="pub-title">Empowering them is empowering us: Activist public relations from a non-system perspective</div>
           <div class="pub-authors">Xu, S.</div>
           <div><span class="pub-badge">★ Top Student Paper — NCA PR Division</span></div>
         </div>
 
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2015 · NCA, Las Vegas, NV — Public Relations Division</div>
+          <div class="pub-title">A voice unheard: Community building of international students in crises</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">August 2015 · AEJMC, San Francisco, CA — Public Relations Division</div>
+          <div class="pub-title">Public relations as development communication? Conceptual overlaps and prospects for a societal paradigm of public relations</div>
+          <div class="pub-authors">Brown, K., Fowler, B. M., Guo, J., Sommerfeldt, E. J., Tills, C., &amp; Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2015 · ICA, San Juan, Puerto Rico — Public Relations Division</div>
+          <div class="pub-title">Risk amplification from an intercultural perspective</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">May 2015 · ICA, San Juan, Puerto Rico — Public Relations Division</div>
+          <div class="pub-title">Strategy of outlaw discourse in building civil society</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
+        <div class="pub-card conf-item">
+          <div class="pub-year">November 2014 · NCA, Chicago, IL — Public Relations Division</div>
+          <div class="pub-title">A case study: Symbiotic relationship between actional legitimacy and corporate social responsibility</div>
+          <div class="pub-authors">Xu, S.</div>
+        </div>
+
       </div>
+
+      <div class="conf-pagination" id="conf-pagination"></div>
     </div><!-- /pubs-conf -->
 
   </div>
@@ -1062,8 +1273,12 @@
       <div class="teaching-card reveal">
         <div class="tc-title">Graduate Courses — UTK</div>
         <div class="course-row">
+          <div><div class="course-code">CCI 644</div><div class="course-name">Quant. Comm and Inf Res. II Computational Social Science</div></div>
+          <div class="course-dates">2026</div>
+        </div>
+        <div class="course-row">
           <div><div class="course-code">PBRL 530</div><div class="course-name">Issues and Crisis Management</div></div>
-          <div class="course-dates">2023–2025</div>
+          <div class="course-dates">2023–2026</div>
         </div>
         <div class="course-row">
           <div><div class="course-code">PBRL 516</div><div class="course-name">PR Publics, Activism, &amp; Social Change</div></div>
@@ -1108,7 +1323,11 @@
       </div>
 
       <div class="teaching-card reveal">
-        <div class="tc-title">Mentorship — Current</div>
+        <div class="tc-title">Students Mentorship</div>
+        <div class="course-row">
+          <div><div class="course-code">Ph.D. Level</div><div class="course-name">Advisor<br>Yidan Zhang</div></div>
+          <div class="course-dates">2025-present</div>
+        </div>
         <div class="course-row">
           <div><div class="course-code">Ph.D. Level</div><div class="course-name">Dissertation Committee Member<br>Curry Wilson, Shelby Luttman</div></div>
           <div class="course-dates">2024–2025</div>
@@ -1244,6 +1463,59 @@
     });
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* Conference pagination */
+  (function() {
+    const PER_PAGE = 15;
+    const items = Array.from(document.querySelectorAll('.conf-item'));
+    const total = items.length;
+    const pageCount = Math.ceil(total / PER_PAGE);
+    let cur = 0;
+
+    function showPage(p) {
+      cur = p;
+      items.forEach((el, i) => {
+        el.classList.toggle('visible', i >= cur * PER_PAGE && i < (cur + 1) * PER_PAGE);
+      });
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const pg = document.getElementById('conf-pagination');
+      pg.innerHTML = '';
+
+      const prev = document.createElement('button');
+      prev.className = 'conf-pg-btn';
+      prev.textContent = '← Prev';
+      prev.disabled = cur === 0;
+      prev.onclick = () => showPage(cur - 1);
+      pg.appendChild(prev);
+
+      for (let i = 0; i < pageCount; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'conf-pg-btn' + (i === cur ? ' active' : '');
+        btn.textContent = i + 1;
+        btn.onclick = (function(p){ return function(){ showPage(p); }; })(i);
+        pg.appendChild(btn);
+      }
+
+      const info = document.createElement('span');
+      info.className = 'conf-pg-info';
+      const start = cur * PER_PAGE + 1;
+      const end = Math.min((cur + 1) * PER_PAGE, total);
+      info.textContent = start + '–' + end + ' of ' + total;
+      pg.appendChild(info);
+
+      const next = document.createElement('button');
+      next.className = 'conf-pg-btn';
+      next.textContent = 'Next →';
+      next.disabled = cur === pageCount - 1;
+      next.onclick = () => showPage(cur + 1);
+      pg.appendChild(next);
+    }
+
+    showPage(0);
+  })();
 
   /* Navbar shadow on scroll */
   window.addEventListener('scroll', () => {
