@@ -451,6 +451,69 @@
       .gold-bar-inner { grid-template-columns: repeat(2,1fr); gap: 0.6rem; }
     }
 
+    /* ── Methodological Expertise ─────────────────────────────────── */
+    .expertise-section { background: var(--navy); }
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.4rem;
+    }
+    .exp-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 1.8rem;
+      transition: var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .exp-card:hover {
+      background: rgba(200,168,75,0.09);
+      border-color: rgba(200,168,75,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+    }
+    .exp-card:hover::before { transform: scaleX(1); }
+    .exp-icon {
+      width: 44px; height: 44px;
+      background: rgba(200,168,75,0.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+    .exp-icon svg { color: var(--gold); }
+    .exp-category {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.45rem;
+    }
+    .exp-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.08rem; font-weight: 700; color: var(--white);
+      line-height: 1.3; margin-bottom: 0.7rem;
+    }
+    .exp-desc {
+      font-size: 0.83rem; color: rgba(255,255,255,0.55);
+      line-height: 1.75;
+    }
+    .exp-tags {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-top: 1.1rem;
+    }
+    .exp-tag {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 3px 10px; border-radius: 100px;
+    }
+
     /* ── Conference pagination ──────────────────────────────────────── */
     .conf-item { display: none; }
     .conf-item.visible { display: block; }
@@ -483,6 +546,7 @@
   <a href="#home" class="nav-brand">Sifan <span>Xu</span></a>
   <ul class="nav-links">
     <li><a href="#research">Research</a></li>
+    <li><a href="#expertise">Expertise</a></li>
     <li><a href="#publications">Publications</a></li>
     <li><a href="#awards">Awards</a></li>
     <li><a href="#teaching">Teaching</a></li>
@@ -504,7 +568,7 @@
       <div class="hero-inst">College of Communication and Information</div>
       <div class="hero-divider"></div>
       <p class="hero-bio">
-        Advancing scholarship at the intersection of crisis communication, corporate social responsibility, and social identity — with a focus on community-based approaches and socially mediated public engagement.
+        Advancing scholarship at the intersection of crisis communication, corporate social responsibility, and social identity, with a focus on community-based approaches and socially mediated public engagement.
       </p>
       <div class="hero-meta">
         <div class="hero-meta-item">
@@ -584,12 +648,12 @@
 
     <div class="interests-grid">
       <div class="interest-card reveal">
-        <div class="ic-title">Crisis Communication</div>
-        <div class="ic-desc">Community-based approaches to crisis management — examining how communities bond, cope, and construct meaning during disasters and organizational crises.</div>
+        <div class="ic-title">Crisis & Risk Communication</div>
+        <div class="ic-desc">Community-based approaches to crisis management and risk communication: Examine how communities bond, cope, and construct meaning during disasters and organizational crises.</div>
       </div>
       <div class="interest-card reveal">
-        <div class="ic-title">Environmental CSR</div>
-        <div class="ic-desc">Corporate social responsibility in the environmental domain — how organizations communicate purpose and impact to diverse, sometimes politically divided, stakeholder publics.</div>
+        <div class="ic-title">Corporate Social Responsibility & Advocacy</div>
+        <div class="ic-desc">Corporate social responsibility and advocacy in charged contexts: Examine how organizations communicate purpose and impact to diverse, sometimes politically divided, stakeholder publics.</div>
       </div>
       <div class="interest-card reveal">
         <div class="ic-title">Social Identity</div>
@@ -597,7 +661,7 @@
       </div>
       <div class="interest-card reveal">
         <div class="ic-title">Social-Mediated Engagement</div>
-        <div class="ic-desc">Digital public relations, media affordances, and social network analysis — how social platforms shape activism, polarized discourse, and organization-public interactions.</div>
+        <div class="ic-desc">Digital public relations, media affordances, and social network analysis: Examine how social platforms shape activism, polarized discourse, and organization-public interactions.</div>
       </div>
     </div>
 
@@ -633,6 +697,99 @@
           <div class="edu-year">2013</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- METHODOLOGICAL EXPERTISE -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="expertise-section" id="expertise">
+  <div class="section-inner">
+    <div class="sh reveal">
+      <div class="sh-label" style="color:var(--gold)">Methods &amp; Tools</div>
+      <h2 class="sh-title" style="color:var(--white)">Methodological Expertise</h2>
+      <div class="sh-line"></div>
+    </div>
+
+    <div class="expertise-grid">
+
+      <!-- Computational Analysis -->
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="exp-category">Computational Analysis</div>
+        <div class="exp-title">Text, Image &amp; Network Analysis</div>
+        <div class="exp-desc">Automated analysis of large-scale digital corpora, mapping relational structures in networks, and leveraging large language models for content understanding.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Text Analysis</span>
+          <span class="exp-tag">(Structural) Topic Modeling</span>
+          <span class="exp-tag">Image Analysis</span>
+          <span class="exp-tag">Large Language Models</span>
+          <span class="exp-tag">Network Analysis</span>
+        </div>
+      </div>
+
+      <!-- Quantitative Analysis -->
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="exp-category">Quantitative Analysis</div>
+        <div class="exp-title">Advanced Statistical Modeling</div>
+        <div class="exp-desc">Rigorous hypothesis testing through conjoint analysis to model preference trade-offs, structural equation modeling for latent-variable frameworks, and time series analysis to track changes over time.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Conjoint Analysis</span>
+          <span class="exp-tag">Structural Equation Modeling</span>
+          <span class="exp-tag">Time Series Analysis</span>
+        </div>
+      </div>
+
+      <!-- Social Network Analysis -->
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="exp-category">Social Network Analysis</div>
+        <div class="exp-title">Relational &amp; Community Structure</div>
+        <div class="exp-desc">Mapping information flows, influence networks, and community formation in digital and organizational contexts. Identify key actors, structural holes, and the dynamics of polarized discourse across social platforms.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Network Mapping</span>
+          <span class="exp-tag">Community Detection</span>
+          <span class="exp-tag">Influence Analysis</span>
+        </div>
+      </div>
+
+      <!-- Experimental Design -->
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+        </div>
+        <div class="exp-category">Experimental Design</div>
+        <div class="exp-title">Controlled Causal Inference</div>
+        <div class="exp-desc">Designing and executing survey experiments to establish causal relationships.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Survey Experiments</span>
+          <span class="exp-tag">Factorial Design</span>
+          <span class="exp-tag">Causal Inference</span>
+        </div>
+      </div>
+
+      <!-- Qualitative Analysis -->
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="exp-category">Qualitative Analysis</div>
+        <div class="exp-title">Interpretive &amp; Inductive Inquiry</div>
+        <div class="exp-desc">In-depth interpretive methods to uncover the lived experiences, meaning-making processes, and institutional dynamics.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Thematic Coding</span>
+          <span class="exp-tag">Discourse Analysis</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
