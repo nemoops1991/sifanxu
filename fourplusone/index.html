@@ -1,1 +1,987 @@
-Placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ADPR 4+1 Program Planner — M.S. in Communication &amp; Information</title>
+<style>
+:root{
+  --navy:#0d1f3c; --navy-mid:#162952; --navy-light:#1e3a6b;
+  --gold:#c8a84b; --gold-lt:#e2c36e;
+  --bg:#f4f6fa; --surface:#ffffff; --surface-2:#f7f8fb;
+  --line:#dde1ea; --line-soft:#eef0f5;
+  --text:#1a2233; --muted:#58637a; --faint:#8a93a6;
+  --ok:#1c7a4f; --ok-bg:#e7f5ee;
+  --warn:#8a5a00; --warn-bg:#fdf3e0;
+  --err:#a32020; --err-bg:#fbeaea;
+  --info-bg:#eaf0fb;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(13,31,60,.06), 0 6px 20px rgba(13,31,60,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1220; --surface:#141d30; --surface-2:#1a2440;
+    --line:#2b3550; --line-soft:#222d47;
+    --text:#e6ebf5; --muted:#a3aec4; --faint:#7c879d;
+    --ok:#5fd39b;  --ok-bg:#123021;
+    --warn:#f0c069; --warn-bg:#33260d;
+    --err:#ff8f8f;  --err-bg:#3a1618;
+    --info-bg:#1b2743;
+    --navy:#0d1f3c; --navy-light:#7fa3e0;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 6px 20px rgba(0,0,0,.25);
+  }
+  .course.on{background:#16234a}
+  .course.overflow{background:#2b2413}
+  .elec-row.auto{background:#2b2413}
+  .card-hd h2{color:#dbe4f7}
+  .totals{background:#0a1428;border:1px solid var(--line)}
+  .verdict.ok{border-color:#1e5a3d}
+  .verdict.warn{border-color:#6b5320}
+  .verdict.err{border-color:#7a2f31}
+  .btn{background:var(--navy-light);color:#0b1220}
+  .btn:hover{background:#9dbcf0}
+  .btn.ghost{color:#cdd8ee}
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);
+  color:#fff; padding:1.75rem 1.5rem 1.5rem;
+  border-bottom:3px solid var(--gold);
+}
+.hd-inner{max-width:1240px;margin:0 auto}
+header h1{font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+header h1 span{color:var(--gold-lt)}
+header p{color:#c3cde0;font-size:.9rem;margin-top:.35rem}
+.hd-note{
+  margin-top:.9rem;font-size:.8rem;color:#a9b7d0;
+  border-left:2px solid rgba(200,168,75,.5);padding-left:.7rem;max-width:62ch;
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+.wrap{max-width:1240px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:1.5rem;align-items:start}
+@media (max-width:980px){.wrap{grid-template-columns:minmax(0,1fr)}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1.25rem;overflow:hidden}
+.card-hd{padding:.9rem 1.1rem;border-bottom:1px solid var(--line-soft);background:var(--surface-2);display:flex;flex-wrap:wrap;gap:.6rem;align-items:baseline;justify-content:space-between}
+.card-hd h2{font-size:1rem;font-weight:700;color:var(--navy)}
+.card-hd .sub{font-size:.8rem;color:var(--muted);font-weight:400}
+.card-bd{padding:1rem 1.1rem}
+
+/* ── Pills / status ─────────────────────────────────────── */
+.pill{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:999px;white-space:nowrap;letter-spacing:.01em}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.err{background:var(--err-bg);color:var(--err)}
+.pill.idle{background:var(--line-soft);color:var(--muted)}
+.pill.elec{background:var(--info-bg);color:var(--navy-light)}
+
+/* ── Student info ───────────────────────────────────────── */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.85rem}
+label.fld{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+input[type=text],select{
+  width:100%;padding:.5rem .6rem;font:inherit;font-size:.9rem;color:var(--text);
+  background:var(--surface);border:1px solid var(--line);border-radius:6px;
+}
+input[type=text]:focus,select:focus{outline:2px solid var(--navy-light);outline-offset:1px;border-color:var(--navy-light)}
+
+/* ── Course rows ────────────────────────────────────────── */
+.course{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.75rem;align-items:start;
+  padding:.7rem .75rem;border:1px solid var(--line-soft);border-radius:8px;margin-bottom:.5rem;
+  background:var(--surface);transition:background .15s,border-color .15s;
+}
+.course:hover{background:var(--surface-2)}
+.course.on{border-color:var(--navy-light);background:#f6f9ff}
+.course.overflow{border-color:var(--gold);background:#fffdf5}
+/* Greyed out = unavailable to this student, and counts toward nothing. */
+.course.blocked{background:var(--surface-2);filter:grayscale(1);color:var(--faint)}
+.course.blocked .c-title{text-decoration:line-through;text-decoration-thickness:1px;color:var(--faint)}
+.course.blocked .c-code{color:var(--faint)}
+.course.blocked:hover{background:var(--surface-2)}
+.course.blocked input{cursor:not-allowed}
+.course.blocked .c-title{cursor:not-allowed}
+.course input[type=checkbox]:disabled{opacity:.4}
+.course input[type=checkbox]{width:18px;height:18px;margin-top:.15rem;accent-color:var(--navy-light);cursor:pointer}
+.c-main{min-width:0}
+.c-title{font-size:.9rem;font-weight:600;line-height:1.4}
+.c-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--navy-light);font-weight:700}
+.c-meta{font-size:.76rem;color:var(--faint);margin-top:.15rem}
+.c-flags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;align-items:center}
+.c-right{display:flex;gap:.4rem;align-items:flex-start}
+.c-right input{width:104px;font-size:.82rem;padding:.35rem .45rem}
+.c-right input.grade{width:62px}
+@media (max-width:640px){
+  .course{grid-template-columns:auto minmax(0,1fr)}
+  .c-right{grid-column:2;width:100%}
+  .c-right input{flex:1;width:auto}
+}
+.note{font-size:.76rem;color:var(--muted);margin-top:.15rem}
+.footnote{font-size:.76rem;color:var(--faint);margin-top:.75rem;padding-top:.6rem;border-top:1px dashed var(--line)}
+
+/* ── Buttons ────────────────────────────────────────────── */
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid transparent;transition:background .15s,border-color .15s}
+.btn{padding:.45rem .8rem;font-size:.82rem;font-weight:600;background:var(--navy);color:#fff}
+.btn:hover{background:var(--navy-light)}
+.btn.ghost{background:transparent;color:var(--navy);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface-2);border-color:var(--navy-light)}
+.btn.tiny{padding:.18rem .5rem;font-size:.7rem;font-weight:700}
+.btn.danger{background:transparent;color:var(--err);border-color:var(--line)}
+.btn.danger:hover{background:var(--err-bg);border-color:var(--err)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.icon-btn{background:transparent;border:1px solid var(--line);color:var(--muted);width:30px;height:30px;font-size:1rem;line-height:1;display:grid;place-items:center;flex:none}
+.icon-btn:hover{border-color:var(--err);color:var(--err);background:var(--err-bg)}
+
+/* ── Elective rows ──────────────────────────────────────── */
+.elec-row{border:1px solid var(--line-soft);border-radius:8px;padding:.7rem .75rem;margin-bottom:.55rem;background:var(--surface)}
+.elec-row.auto{background:#fffdf5;border-color:var(--gold)}
+.elec-grid{display:grid;grid-template-columns:110px minmax(0,1fr) 70px 104px 62px auto;gap:.5rem;align-items:center}
+@media (max-width:820px){.elec-grid{grid-template-columns:110px minmax(0,1fr) auto}}
+.elec-grid input{font-size:.85rem;padding:.4rem .5rem}
+.elec-grid input.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;text-transform:uppercase}
+.mini-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:700;margin-bottom:.2rem;display:block}
+.sdc{display:flex;align-items:center;gap:.35rem;font-size:.76rem;color:var(--muted);margin-top:.5rem}
+.sdc input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer}
+
+/* ── Audit sidebar ──────────────────────────────────────── */
+.side{position:sticky;top:1.5rem}
+@media (max-width:980px){.side{position:static}}
+.audit-row{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--line-soft)}
+.audit-row:last-of-type{border-bottom:0}
+.audit-row .lbl{font-size:.84rem;font-weight:600}
+.audit-row .cnt{font-size:.74rem;color:var(--muted);font-weight:400;display:block}
+.bar{height:5px;background:var(--line-soft);border-radius:3px;overflow:hidden;margin-top:.4rem}
+.bar > i{display:block;height:100%;background:var(--navy-light);border-radius:3px;transition:width .3s ease}
+.bar > i.done{background:var(--ok)}
+.bar > i.over{background:var(--gold)}
+
+.totals{background:var(--navy);color:#fff;border-radius:8px;padding:.9rem 1rem;margin-top:.9rem}
+.totals .big{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem;color:#c3cde0;padding:.25rem 0}
+.totals .big b{font-size:1.35rem;color:#fff;font-weight:700}
+.totals .big b.short{color:#ffb3b3}
+.totals .big b.met{color:var(--gold-lt)}
+
+.verdict{margin-top:.9rem;border-radius:8px;padding:.8rem .9rem;font-size:.85rem;font-weight:600;line-height:1.5}
+.verdict.ok{background:var(--ok-bg);color:var(--ok);border:1px solid #b9e0cd}
+.verdict.warn{background:var(--warn-bg);color:var(--warn);border:1px solid #eed9a8}
+.verdict.err{background:var(--err-bg);color:var(--err);border:1px solid #edc0c0}
+
+.issues{list-style:none;margin-top:.7rem;font-size:.8rem}
+.issues li{padding:.45rem .55rem;border-radius:6px;margin-bottom:.35rem;line-height:1.45;border-left:3px solid}
+.issues li.e{background:var(--err-bg);color:var(--err);border-color:var(--err)}
+.issues li.w{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.issues li.i{background:var(--info-bg);color:var(--navy-light);border-color:var(--navy-light)}
+.issues li.g{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+
+.saved{font-size:.72rem;color:var(--faint);text-align:center;margin-top:.6rem;min-height:1em}
+
+/* ── Print ──────────────────────────────────────────────── */
+@media print{
+  body{background:#fff}
+  header{background:#fff;color:#000;border-bottom:2px solid #000;padding:0 0 .5rem}
+  header h1,header h1 span{color:#000;font-size:14pt}
+  header p,.hd-note{color:#333}
+  .wrap{display:block;max-width:100%;padding:0}
+  .card{box-shadow:none;break-inside:avoid;border-color:#999}
+  .side{position:static}
+  .no-print{display:none !important}
+  .course,.elec-row{break-inside:avoid}
+  input[type=text],select{border:0;border-bottom:1px solid #666;border-radius:0}
+  .course:not(.on):not(.overflow){display:none}
+  .totals{background:#fff;color:#000;border:1px solid #000}
+  .totals .big,.totals .big b{color:#000}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-inner">
+    <h1>Program Planning Form · <span>ADPR 4+1 Concentration</span></h1>
+    <p>M.S. in Communication &amp; Information — Tombras School of Advertising &amp; Public Relations</p>
+    <p class="hd-note">Tick the courses you have taken (or plan to take). Extra selections in Blocks 1–3 roll
+      automatically into Block 4 as general electives. This planner is an unofficial advising aid — your
+      advisor's signature on the official form is what counts.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+
+    <!-- ── Student info ─────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd"><h2>Student Information</h2></div>
+      <div class="card-bd">
+        <div class="grid2">
+          <div>
+            <label class="fld" for="f-name">Student Name &amp; ID</label>
+            <input type="text" id="f-name" data-save placeholder="Jane Doe · 000123456" />
+          </div>
+          <div>
+            <label class="fld" for="f-sem">Semester Entered</label>
+            <input type="text" id="f-sem" data-save placeholder="Fall 2025" />
+          </div>
+          <div>
+            <label class="fld" for="f-major">Undergraduate Major</label>
+            <select id="f-major" data-save>
+              <option value="">— select —</option>
+              <option value="advt">Advertising</option>
+              <option value="pbrl">Public Relations</option>
+              <option value="other">Other / outside ADPR</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem">
+          <span class="mini-label">Undergraduate courses already completed — the graduate equivalent is greyed out and counts toward nothing</span>
+          <div class="btn-row" style="gap:1rem;margin-top:.35rem">
+            <label class="sdc" style="margin:0"><input type="checkbox" id="pre-ADVT480" data-save /> ADVT 480</label>
+            <label class="sdc" style="margin:0"><input type="checkbox" id="pre-ADVT460" data-save /> ADVT 460</label>
+            <label class="sdc" style="margin:0"><input type="checkbox" id="pre-ADPR415" data-save /> ADPR 415</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Block 1 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 1 — Advertising &amp; Public Relations Courses
+          <span class="sub">select 4 · 12 hours</span></h2>
+        <span class="pill idle" id="p-b1">0 of 4</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-b1"></div>
+        <p class="footnote">
+          <sup>1</sup> ADVT 510 cannot be taken if ADVT 480 was already completed.
+          <sup>2</sup> ADVT 560 cannot be taken if ADVT 460 was already completed.<br />
+          Selections beyond the required four are counted as Block 4 general electives.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Block 2 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 2 — Additional Strategic Communication Courses
+          <span class="sub">select 1 · 3 hours</span></h2>
+        <span class="pill idle" id="p-b2">0 of 1</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-b2"></div>
+        <p class="footnote">
+          <sup>*</sup> ADPR 515 cannot be taken if ADPR 415 was already completed.
+          Selections beyond the required one are counted as Block 4 general electives.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Block 3 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 3 — Concept Application Courses
+          <span class="sub">select 1 · 3 hours</span></h2>
+        <span class="pill idle" id="p-b3">0 of 1</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-b3"></div>
+        <p class="footnote">
+          <sup>3</sup> Advertising undergraduate majors take PBRL 470S; Public Relations undergraduate majors
+          take ADVT 470. Both are 400-level and require advisor review when used as a Block 4 elective.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Block 4 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 4 — General Electives <span class="sub">select 4 · 12 hours</span></h2>
+        <span class="pill idle" id="p-b4">0 of 4</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-auto"></div>
+        <div id="list-elec"></div>
+        <div class="btn-row no-print" style="margin-top:.6rem">
+          <button class="btn ghost" id="add-elec">+ Add elective</button>
+        </div>
+        <p class="footnote">
+          Any class carrying graduate credit from <b>ADPR, ADVT, PBRL, CMST, JREM, or INSC</b> may be used,
+          <b>except ADPR 541 and ADPR 542</b>. Courses below the 500 level are flagged for manual advisor
+          review. Electives from the SDC concentration need advisor approval and cannot exceed 6 credits
+          in total. Electives outside the College require the advisor's permission.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Audit sidebar ──────────────────────────────────── -->
+  <aside class="side">
+    <section class="card">
+      <div class="card-hd"><h2>Degree Audit</h2><span class="sub" id="audit-stamp"></span></div>
+      <div class="card-bd">
+        <div id="audit-blocks"></div>
+
+        <div class="totals">
+          <div class="big"><span>Courses entered</span><b id="t-courses">0</b></div>
+          <div class="big"><span>Credit hours</span><b id="t-hours">0</b></div>
+        </div>
+
+        <div class="verdict err" id="verdict">Nothing selected yet.</div>
+        <ul class="issues" id="issues"></ul>
+
+        <div class="btn-row no-print" style="margin-top:1rem">
+          <button class="btn" id="btn-print">Print / Save PDF</button>
+          <button class="btn ghost" id="btn-export">Export JSON</button>
+          <button class="btn ghost" id="btn-import">Import</button>
+          <button class="btn danger" id="btn-reset">Reset</button>
+        </div>
+        <input type="file" id="file-in" accept="application/json" hidden />
+        <p class="saved no-print" id="saved"></p>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<script>
+/* ══ Course catalogue (from the Aug 2025 revision of the form) ══ */
+const CATALOG = {
+  b1: { need: 4, label: 'Block 1 · ADPR core', courses: [
+    {id:'ADVT510', code:'ADVT 510', name:'Advertising and Society',            term:'fall',   fn:'1', lockedBy:'pre-ADVT480', equiv:'ADVT 480'},
+    {id:'ADVT520', code:'ADVT 520', name:'Advertising and Communication Theory', term:'fall'},
+    {id:'ADVT540', code:'ADVT 540', name:'Advertising Decision Making',        term:'spring'},
+    {id:'ADVT560', code:'ADVT 560', name:'Account Planning',                   term:'spring', fn:'2', lockedBy:'pre-ADVT460', equiv:'ADVT 460'},
+    {id:'PBRL530', code:'PBRL 530', name:'Issues and Crisis Management',       term:'spring'},
+    {id:'PBRL540', code:'PBRL 540', name:'Public Relations Management',        term:'fall'},
+    {id:'PBRL550', code:'PBRL 550', name:'Public Relations Strategies',        term:'spring'},
+  ]},
+  b2: { need: 1, label: 'Block 2 · Strategic comm', courses: [
+    {id:'ADPR515', code:'ADPR 515', name:'Social Media Analytics',                   term:'fall', fn:'*', lockedBy:'pre-ADPR415', equiv:'ADPR 415'},
+    {id:'ADPR530', code:'ADPR 530', name:'Advertising and Public Relations Research', term:'spring'},
+    {id:'ADPR562', code:'ADPR 562', name:'Social Media Strategy and Tactics'},
+  ]},
+  b3: { need: 1, label: 'Block 3 · Concept application', courses: [
+    {id:'ADVT470',  code:'ADVT 470',  name:'Advertising Campaigns',      note:'For Public Relations undergraduate majors', fn:'3', forMajor:'pbrl'},
+    {id:'PBRL470S', code:'PBRL 470S', name:'Public Relations Campaigns', note:'For Advertising undergraduate majors',      fn:'3', forMajor:'advt'},
+    {id:'ADPR590',  code:'ADPR 590',  name:'Advertising and Public Relations Project', term:'fall'},
+  ]},
+};
+const B4_NEED = 4, CREDITS = 3, MIN_COURSES = 10, MIN_HOURS = 30, SDC_CAP = 6;
+const APPROVED_PREFIXES = ['ADPR','ADVT','PBRL','CMST','JREM','INSC'];
+const BANNED = ['ADPR541','ADPR542'];
+const STORE_KEY = 'adpr-4plus1-plan-v1';
+
+/* ══ State ══ */
+let state = {
+  fields: {},                 // text/select/checkbox inputs keyed by id
+  picks:  {},                 // courseId -> {seq, grade, sem}
+  elecs:  [],                 // {uid, code, name, credits, sem, grade, sdc}
+  seq:    0,                  // monotonic tick counter (selection order)
+};
+let uidCounter = 0;
+
+/* ══ Rendering: block course lists ══ */
+function renderBlocks(){
+  for (const bk of ['b1','b2','b3']){
+    const host = document.getElementById('list-'+bk);
+    host.innerHTML = '';
+    CATALOG[bk].courses.forEach(c => host.appendChild(courseRow(bk, c)));
+  }
+}
+
+function courseRow(bk, c){
+  const el = document.createElement('div');
+  el.className = 'course';
+  el.dataset.cid = c.id;
+
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.id = 'cb-'+c.id;
+  cb.checked = !!state.picks[c.id];
+  cb.addEventListener('change', () => togglePick(c.id, cb.checked));
+
+  const main = document.createElement('div');
+  main.className = 'c-main';
+  main.innerHTML =
+    `<label class="c-title" for="cb-${c.id}">
+       <span class="c-code">${c.code}</span> — ${c.name}${c.fn ? `<sup>${c.fn}</sup>` : ''}
+     </label>` +
+    `<div class="c-meta">(3) credit hours${c.term ? ' · offered ' + c.term : ''}${c.note ? ' · ' + c.note : ''}</div>` +
+    `<div class="c-flags" id="flags-${c.id}"></div>`;
+
+  const right = document.createElement('div');
+  right.className = 'c-right';
+  const grade = mkInput('grade', 'Grade', (state.picks[c.id]||{}).grade || '',
+                        v => { if (state.picks[c.id]) state.picks[c.id].grade = v; save(); });
+  const sem   = mkInput('sem',   'Sem/Year', (state.picks[c.id]||{}).sem || '',
+                        v => { if (state.picks[c.id]) state.picks[c.id].sem = v; save(); });
+  right.append(grade, sem);
+
+  el.append(cb, main, right);
+  return el;
+}
+
+function mkInput(cls, ph, val, onInput){
+  const i = document.createElement('input');
+  i.type = 'text'; i.className = cls; i.placeholder = ph; i.value = val;
+  i.addEventListener('input', () => onInput(i.value));
+  return i;
+}
+
+/* ══ Selection order drives the overflow ══ */
+function togglePick(cid, on){
+  if (on) state.picks[cid] = { seq: ++state.seq, grade:'', sem:'' };
+  else    delete state.picks[cid];
+  refresh();
+}
+
+/** Promote a course to the front of its block's order so it counts as required. */
+function promote(bk, cid){
+  const seqs = CATALOG[bk].courses.filter(c => state.picks[c.id]).map(c => state.picks[c.id].seq);
+  state.picks[cid].seq = Math.min(...seqs) - 1;
+  refresh();
+}
+
+/** Split a block's picks into the ones that satisfy it and the ones that overflow. */
+function allocate(bk){
+  const need = CATALOG[bk].need;
+  const picked = CATALOG[bk].courses
+    .filter(c => state.picks[c.id])
+    .sort((a,b) => state.picks[a.id].seq - state.picks[b.id].seq);
+  return { required: picked.slice(0, need), overflow: picked.slice(need) };
+}
+
+/* ══ Elective rows ══ */
+function addElective(seed){
+  state.elecs.push(Object.assign(
+    { uid:'e'+(++uidCounter), code:'', name:'', credits:CREDITS, sem:'', grade:'', sdc:false }, seed||{}));
+}
+
+/* Rebuild the elective rows only when the set of rows actually changes.
+   Re-rendering on every keystroke destroyed the <input> being typed into,
+   which stole the caret and limited the student to one character at a time. */
+function syncElectives(){
+  const host = document.getElementById('list-elec');
+  const rendered = Array.from(host.children).map(el => el.dataset.uid).join(',');
+  const wanted   = state.elecs.map(e => e.uid).join(',');
+  if (rendered === wanted) return;
+  host.innerHTML = '';
+  state.elecs.forEach(e => host.appendChild(electiveRow(e)));
+}
+
+function electiveRow(e){
+  const row = document.createElement('div');
+  row.className = 'elec-row';
+  row.dataset.uid = e.uid;
+
+  const grid = document.createElement('div');
+  grid.className = 'elec-grid';
+
+  const mk = (key, ph, cls, label) => {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<span class="mini-label">${label}</span>`;
+    const i = document.createElement('input');
+    i.type = 'text'; i.placeholder = ph; i.value = e[key] ?? ''; if (cls) i.className = cls;
+    i.addEventListener('input', () => {
+      if (key === 'credits'){
+        /* Strip anything that isn't a number and put the cleaned text back in the
+           field, keeping the caret where the student left it. The row is no longer
+           re-rendered on each keystroke, so nothing else corrects the display. */
+        const clean = i.value.replace(/[^\d.]/g, '');
+        if (clean !== i.value){
+          const pos = Math.max(0, i.selectionStart - (i.value.length - clean.length));
+          i.value = clean;
+          try { i.setSelectionRange(pos, pos); } catch (err) { /* not selectable */ }
+        }
+        e[key] = clean;
+      } else {
+        e[key] = i.value;
+      }
+      if (key === 'code' || key === 'credits') refresh(); else save();
+    });
+    wrap.appendChild(i);
+    return wrap;
+  };
+
+  const del = document.createElement('button');
+  del.className = 'icon-btn no-print'; del.type = 'button';
+  del.title = 'Remove elective'; del.setAttribute('aria-label','Remove elective'); del.textContent = '×';
+  del.addEventListener('click', () => {
+    const i = state.elecs.findIndex(x => x.uid === e.uid);   // by identity, not a captured index
+    if (i >= 0) state.elecs.splice(i, 1);
+    refresh();
+  });
+  const delWrap = document.createElement('div');
+  delWrap.innerHTML = '<span class="mini-label">&nbsp;</span>';
+  delWrap.appendChild(del);
+
+  grid.append(
+    mk('code','CMST 540','code','Course #'),
+    mk('name','Course title',null,'Title'),
+    mk('credits','3',null,'Hrs'),
+    mk('sem','Fall 2026',null,'Sem/Year'),
+    mk('grade','A',null,'Grade'),
+    delWrap
+  );
+
+  const sdc = document.createElement('label');
+  sdc.className = 'sdc';
+  const sc = document.createElement('input');
+  sc.type = 'checkbox'; sc.checked = !!e.sdc;
+  sc.addEventListener('change', () => { e.sdc = sc.checked; refresh(); });
+  sdc.append(sc, document.createTextNode(' This is an SDC concentration course (advisor approval, 6 credit cap)'));
+
+  const flags = document.createElement('div');
+  flags.className = 'c-flags'; flags.id = 'eflags-'+e.uid;
+
+  row.append(grid, sdc, flags);
+  return row;
+}
+
+/* ══ Elective validation ══ */
+function parseCode(raw){
+  const m = String(raw||'').trim().toUpperCase().match(/^([A-Z]{2,6})\s*[-\s]?\s*(\d{3})([A-Z]?)$/);
+  if (!m) return null;
+  return { prefix:m[1], number:parseInt(m[2],10), suffix:m[3], key:m[1]+m[2]+m[3] };
+}
+
+/** Returns {level:'ok'|'warn'|'err', text} badges for one elective. */
+function checkElective(code, credits){
+  const out = [];
+  const p = parseCode(code);
+  if (!String(code||'').trim()){
+    out.push({level:'idle', text:'Empty — enter a course number'});
+    return out;
+  }
+  if (!p){
+    out.push({level:'err', text:'Unrecognized course number (use e.g. "CMST 540")'});
+    return out;
+  }
+  if (BANNED.includes(p.prefix + p.number)){
+    out.push({level:'err', text:`${p.prefix} ${p.number} cannot be used as an elective`});
+    return out;
+  }
+  if (p.number >= 500){
+    out.push({level:'ok', text:'500 level — counts as an elective'});
+  } else {
+    out.push({level:'warn', text:`${p.number} level (below 500) — advisor must review`});
+  }
+  if (!APPROVED_PREFIXES.includes(p.prefix)){
+    out.push({level:'warn', text:`${p.prefix} is outside the College — advisor permission required`});
+  }
+  if (!(Number(credits) > 0)) out.push({level:'err', text:'Enter credit hours'});
+  return out;
+}
+
+/* ══ Badge helper ══ */
+function badge(host, level, text){
+  const s = document.createElement('span');
+  s.className = 'pill ' + level;
+  s.textContent = text;
+  host.appendChild(s);
+}
+
+/* ══ The main recompute ══ */
+function refresh(){
+  const dropped = enforceEligibility();
+  syncElectives();
+
+  const issues = [];
+  const alloc = {};
+  let courseCount = 0, hours = 0;
+
+  /* — Blocks 1–3 — */
+  for (const bk of ['b1','b2','b3']){
+    const a = alloc[bk] = allocate(bk);
+    const need = CATALOG[bk].need;
+
+    CATALOG[bk].courses.forEach(c => {
+      const el = document.querySelector(`.course[data-cid="${c.id}"]`);
+      const flags = document.getElementById('flags-'+c.id);
+      if (!el || !flags) return;
+      flags.innerHTML = '';
+      el.classList.toggle('on', a.required.some(x => x.id === c.id));
+      el.classList.toggle('overflow', a.overflow.some(x => x.id === c.id));
+
+      const why = ineligible(c);
+      if (why){
+        badge(flags, 'idle', why.short + ' · does not count');
+        return;                      // ineligible: no other badge can apply
+      }
+      if (a.required.some(x => x.id === c.id)){
+        badge(flags, 'ok', `Counts toward ${CATALOG[bk].label.split(' · ')[0]}`);
+      }
+      if (a.overflow.some(x => x.id === c.id)){
+        badge(flags, 'elec', '→ Moved to Block 4 as an elective');
+        const b = document.createElement('button');
+        b.className = 'btn tiny ghost no-print'; b.type = 'button';
+        b.textContent = 'Count in ' + CATALOG[bk].label.split(' · ')[0];
+        b.addEventListener('click', () => promote(bk, c.id));
+        flags.appendChild(b);
+      }
+    });
+
+    /* Block-level issues */
+    const n = a.required.length;
+    setPill('p-'+bk, n === need ? 'ok' : (n ? 'warn' : 'idle'), `${n} of ${need}`);
+    if (n < need){
+      issues.push({k:'e', t:`${CATALOG[bk].label}: ${need - n} more course${need-n>1?'s':''} needed.`});
+    }
+    if (a.overflow.length){
+      issues.push({k:'i', t:`${a.overflow.length} extra course${a.overflow.length>1?'s':''} from ` +
+        `${CATALOG[bk].label.split(' · ')[0]} moved into Block 4: ${a.overflow.map(c=>c.code).join(', ')}.`});
+    }
+
+    courseCount += a.required.length;
+    hours += a.required.length * CREDITS;
+  }
+
+  /* — Unavailable courses — */
+  /* A ticked course that just became ineligible was removed above; say so plainly. */
+  dropped.forEach(d => issues.push({k:'w', t:`${d.why.long} It was removed from your plan.`}));
+
+  const greyed = ALL_COURSES().map(c => ({c, why:ineligible(c)})).filter(x => x.why);
+  if (greyed.length){
+    issues.push({k:'i', t:`Unavailable to you: ${greyed.map(x => x.c.code).join(', ')}. ` +
+      `These are greyed out and count toward nothing.`});
+  }
+  if (!MAJOR_LABEL[state.fields['f-major']]){
+    issues.push({k:'i', t:`Select your undergraduate major so Block 3 can grey out the campaigns course that does not apply to you.`});
+  }
+
+  /* — Block 4: auto-migrated overflow — */
+  const autoHost = document.getElementById('list-auto');
+  autoHost.innerHTML = '';
+  const overflowAll = ['b1','b2','b3'].flatMap(bk =>
+    alloc[bk].overflow.map(c => ({ ...c, from: CATALOG[bk].label.split(' · ')[0] })));
+
+  let b4Count = 0;
+
+  overflowAll.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'elec-row auto';
+    const p = parseCode(c.code);
+    row.innerHTML =
+      `<div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:space-between;align-items:baseline">
+         <div class="c-title"><span class="c-code">${c.code}</span> — ${c.name}</div>
+         <span class="pill elec">carried from ${c.from}</span>
+       </div>
+       <div class="c-meta">(3) credit hours${state.picks[c.id].sem ? ' · ' + state.picks[c.id].sem : ''}${state.picks[c.id].grade ? ' · grade ' + state.picks[c.id].grade : ''}</div>
+       <div class="c-flags"></div>`;
+    const flags = row.querySelector('.c-flags');
+
+    if (p && p.number < 500){
+      badge(flags, 'warn', `${p.number} level (below 500) — advisor must review`);
+      issues.push({k:'w', t:`${c.code} carried into Block 4 is below the 500 level — flag it for advisor review.`});
+    } else {
+      badge(flags, 'ok', '500 level — counts as an elective');
+    }
+    autoHost.appendChild(row);
+
+    b4Count += 1;
+    courseCount += 1;
+    hours += CREDITS;
+  });
+
+  /* — Block 4: manually entered electives — */
+  /* Every course already accounted for elsewhere, so a typed elective can't double-count. */
+  const claimed = new Set();
+  ['b1','b2','b3'].forEach(bk => {
+    alloc[bk].required.concat(alloc[bk].overflow).forEach(c => {
+      const p = parseCode(c.code);
+      if (p) claimed.add(p.key);
+    });
+  });
+
+  /* Greyed-out courses count toward nothing, so typing one by hand into Block 4
+     is rejected for the same reason the checkbox is disabled. */
+  const barred = new Map();
+  ALL_COURSES().forEach(c => {
+    const why = ineligible(c);
+    const p = parseCode(c.code);
+    if (why && p) barred.set(p.key, why);
+  });
+
+  let sdcCredits = 0;
+  state.elecs.forEach(e => {
+    const flags = document.getElementById('eflags-'+e.uid);
+    const badges = checkElective(e.code, e.credits);
+    const p = parseCode(e.code);
+    if (p && barred.has(p.key)){
+      badges.push({level:'err', text:`${barred.get(p.key).short} — cannot be used as an elective`});
+    } else if (p && claimed.has(p.key)){
+      badges.push({level:'err', text:`${p.prefix} ${p.number}${p.suffix} is already counted elsewhere in this plan`});
+    }
+    flags.innerHTML = '';
+    badges.forEach(b => badge(flags, b.level === 'idle' ? 'idle' : b.level, b.text));
+
+    const hasErr  = badges.some(b => b.level === 'err');
+    const isEmpty = !String(e.code||'').trim() && !String(e.name||'').trim();
+    if (isEmpty) return;
+    if (p && !hasErr) claimed.add(p.key);
+
+    if (e.sdc){
+      badge(flags, 'warn', 'SDC concentration — advisor approval required');
+      sdcCredits += Number(e.credits) || 0;
+    }
+    if (hasErr){
+      badges.filter(b => b.level === 'err').forEach(b =>
+        issues.push({k:'e', t:`Block 4 · ${e.code || 'untitled row'}: ${b.text}.`}));
+      return; // an errored row does not count toward the requirement
+    }
+    badges.filter(b => b.level === 'warn').forEach(b =>
+      issues.push({k:'w', t:`Block 4 · ${e.code}: ${b.text}.`}));
+
+    b4Count += 1;
+    courseCount += 1;
+    hours += Number(e.credits) || 0;
+  });
+
+  if (sdcCredits > SDC_CAP){
+    issues.push({k:'e', t:`SDC concentration electives total ${sdcCredits} credits — the maximum is ${SDC_CAP}.`});
+  }
+
+  setPill('p-b4', b4Count >= B4_NEED ? 'ok' : (b4Count ? 'warn' : 'idle'), `${b4Count} of ${B4_NEED}`);
+  if (b4Count < B4_NEED){
+    issues.push({k:'e', t:`Block 4: ${B4_NEED - b4Count} more elective${B4_NEED-b4Count>1?'s':''} needed.`});
+  }
+
+  /* — Final check: at least 10 courses / 30 hours — */
+  if (courseCount < MIN_COURSES){
+    issues.push({k:'e', t:`Final check: ${courseCount} course${courseCount===1?'':'s'} entered — the plan needs at least ${MIN_COURSES}.`});
+  }
+  if (hours < MIN_HOURS){
+    issues.push({k:'e', t:`Final check: ${hours} credit hours — total course hours must be no less than ${MIN_HOURS}.`});
+  }
+
+  renderAudit(alloc, b4Count, courseCount, hours, issues);
+  save();
+}
+
+function setPill(id, level, text){
+  const el = document.getElementById(id);
+  el.className = 'pill ' + level;
+  el.textContent = text;
+}
+
+/* ══ Audit sidebar ══ */
+function renderAudit(alloc, b4Count, courseCount, hours, issues){
+  const host = document.getElementById('audit-blocks');
+  host.innerHTML = '';
+
+  const rows = [
+    ...['b1','b2','b3'].map(bk => ({
+      label: CATALOG[bk].label.split(' · ')[0],
+      sub:   CATALOG[bk].label.split(' · ')[1],
+      have:  alloc[bk].required.length,
+      need:  CATALOG[bk].need,
+      extra: alloc[bk].overflow.length,
+    })),
+    { label:'Block 4', sub:'General electives', have:b4Count, need:B4_NEED, extra:0 },
+  ];
+
+  rows.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'audit-row';
+    div.innerHTML =
+      `<div style="flex:1;min-width:0">
+         <span class="lbl">${r.label}</span>
+         <span class="cnt">${r.sub} · ${r.have * CREDITS} of ${r.need * CREDITS} hrs${r.extra ? ` · ${r.extra} extra → Block 4` : ''}</span>
+         <span class="bar"><i class="${r.have >= r.need ? 'done' : ''}" style="width:${Math.min(100, (r.have/r.need)*100)}%"></i></span>
+       </div>
+       <span class="pill ${r.have >= r.need ? 'ok' : (r.have ? 'warn' : 'idle')}">${r.have}/${r.need}</span>`;
+    host.appendChild(div);
+  });
+
+  document.getElementById('t-courses').textContent = courseCount;
+  document.getElementById('t-hours').textContent  = hours;
+  document.getElementById('t-courses').className = courseCount >= MIN_COURSES ? 'met' : 'short';
+  document.getElementById('t-hours').className   = hours >= MIN_HOURS ? 'met' : 'short';
+
+  const errs  = issues.filter(i => i.k === 'e');
+  const warns = issues.filter(i => i.k === 'w');
+  const v = document.getElementById('verdict');
+  if (errs.length){
+    v.className = 'verdict err';
+    v.textContent = `Plan incomplete — ${errs.length} requirement${errs.length>1?'s':''} not yet met.`;
+  } else if (warns.length){
+    v.className = 'verdict warn';
+    v.textContent = `All blocks satisfied (${courseCount} courses · ${hours} hours). ` +
+                    `${warns.length} item${warns.length>1?'s':''} need your advisor's review before sign-off.`;
+  } else {
+    v.className = 'verdict ok';
+    v.textContent = `Plan complete — ${courseCount} courses · ${hours} credit hours. ` +
+                    `All block requirements and the 30-hour minimum are met.`;
+  }
+
+  const ul = document.getElementById('issues');
+  ul.innerHTML = '';
+  const order = { e:0, w:1, i:2, g:3 };
+  issues.slice().sort((a,b) => order[a.k] - order[b.k]).forEach(i => {
+    const li = document.createElement('li');
+    li.className = i.k;
+    li.textContent = i.t;
+    ul.appendChild(li);
+  });
+
+  const d = new Date();
+  document.getElementById('audit-stamp').textContent =
+    d.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+}
+
+/* ══ Eligibility ══
+   ONE rule governs every greyed-out course: it cannot be selected, and it counts
+   toward nothing — not its own block, not Block 4, not the credit totals.
+   A course is ineligible for exactly two reasons:
+     · prereq — the student already took the undergraduate equivalent
+     · major  — it belongs to the other undergraduate track (footnote 3's
+                cross-over: advertising undergrads take the PR campaigns course
+                and PR undergrads take the advertising one)
+   Courses with neither `lockedBy` nor `forMajor` (e.g. ADPR 590) are always open. */
+const MAJOR_LABEL = { advt:'Advertising', pbrl:'Public Relations' };
+
+function majorLock(c){
+  const major = state.fields['f-major'];
+  if (!c.forMajor || !MAJOR_LABEL[major] || c.forMajor === major) return null;
+  const takeInstead = ['b1','b2','b3']
+    .flatMap(bk => CATALOG[bk].courses)
+    .find(x => x.forMajor === major);
+  return { label: MAJOR_LABEL[major], instead: takeInstead ? takeInstead.code : null };
+}
+
+/** @returns {{kind:string, short:string, long:string}|null} */
+function ineligible(c){
+  if (c.lockedBy && state.fields[c.lockedBy]){
+    return {
+      kind:  'prereq',
+      short: `Already completed ${c.equiv}`,
+      long:  `${c.code} is unavailable because ${c.equiv} was already completed as an undergraduate.`,
+    };
+  }
+  const ml = majorLock(c);
+  if (ml){
+    return {
+      kind:  'major',
+      short: `Not for ${ml.label} undergraduate majors` + (ml.instead ? ` — take ${ml.instead}` : ''),
+      long:  `${c.code} is unavailable to ${ml.label} undergraduate majors` +
+             (ml.instead ? ` — they take ${ml.instead} instead.` : '.'),
+    };
+  }
+  return null;
+}
+
+const ALL_COURSES = () => ['b1','b2','b3'].flatMap(bk => CATALOG[bk].courses);
+
+/** Grey out and disable ineligible courses; drop any that were already ticked. */
+function enforceEligibility(){
+  const dropped = [];
+  ALL_COURSES().forEach(c => {
+    const why = ineligible(c);
+    if (why && state.picks[c.id]){
+      delete state.picks[c.id];               // counts toward nothing, so stop tracking it
+      dropped.push({ course:c, why });
+    }
+    const el = document.querySelector(`.course[data-cid="${c.id}"]`);
+    const cb = document.getElementById('cb-'+c.id);
+    if (el){
+      el.classList.toggle('blocked', !!why);
+      el.querySelectorAll('.c-right input').forEach(i => { i.disabled = !!why; });
+    }
+    if (cb){
+      cb.disabled = !!why;
+      cb.checked  = !!state.picks[c.id];
+      cb.title    = why ? why.short : '';
+    }
+  });
+  return dropped;
+}
+
+/* ══ Persistence ══ */
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      const s = document.getElementById('saved');
+      s.textContent = 'Saved to this browser · ' + new Date().toLocaleTimeString();
+    } catch (err) { /* private mode — planner still works, just not persisted */ }
+  }, 250);
+}
+
+function load(){
+  let raw = null;
+  try { raw = localStorage.getItem(STORE_KEY); } catch (err) { /* ignore */ }
+  if (raw){
+    try { hydrate(JSON.parse(raw)); return; } catch (err) { /* fall through */ }
+  }
+  for (let i = 0; i < B4_NEED; i++) addElective();
+}
+
+function hydrate(data){
+  state = Object.assign({fields:{}, picks:{}, elecs:[], seq:0}, data);
+  state.elecs = (state.elecs || []).map(e => Object.assign(
+    {uid:'e'+(++uidCounter), code:'', name:'', credits:CREDITS, sem:'', grade:'', sdc:false}, e, {uid:'e'+uidCounter}));
+  if (!state.elecs.length) for (let i = 0; i < B4_NEED; i++) addElective();
+  document.querySelectorAll('[data-save]').forEach(el => {
+    const v = state.fields[el.id];
+    if (v === undefined) return;
+    if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+  });
+}
+
+/* ══ Wiring ══ */
+document.querySelectorAll('[data-save]').forEach(el => {
+  el.addEventListener(el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input', () => {
+    state.fields[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+    refresh();
+  });
+});
+
+document.getElementById('add-elec').addEventListener('click', () => { addElective(); refresh(); });
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (!confirm('Clear every selection and start over? This cannot be undone.')) return;
+  try { localStorage.removeItem(STORE_KEY); } catch (err) { /* ignore */ }
+  state = {fields:{}, picks:{}, elecs:[], seq:0};
+  for (let i = 0; i < B4_NEED; i++) addElective();
+  document.querySelectorAll('[data-save]').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false; else el.value = '';
+  });
+  renderBlocks(); refresh();
+});
+
+document.getElementById('btn-export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.fields['f-name'] || 'adpr-4plus1') .replace(/[^\w-]+/g,'_') + '-program-plan.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-in').click());
+document.getElementById('file-in').addEventListener('change', ev => {
+  const f = ev.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try { hydrate(JSON.parse(r.result)); renderBlocks(); refresh(); }
+    catch (err) { alert('That file could not be read as a saved program plan.'); }
+  };
+  r.readAsText(f);
+  ev.target.value = '';
+});
+
+/* ══ Boot ══ */
+load();
+renderBlocks();
+refresh();
+</script>
+</body>
+</html>
