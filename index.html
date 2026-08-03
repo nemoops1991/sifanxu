@@ -1,1684 +1,987 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sifan Xu, Ph.D. | Associate Professor of Public Relations</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-  <style>
-    /* ── Variables ─────────────────────────────────────────────────── */
-    :root {
-      --navy:       #0d1f3c;
-      --navy-mid:   #162952;
-      --navy-light: #1e3a6b;
-      --gold:       #c8a84b;
-      --gold-lt:    #e2c36e;
-      --white:      #ffffff;
-      --gray-50:    #f7f8fb;
-      --gray-100:   #eef0f5;
-      --gray-200:   #dde1ea;
-      --gray-400:   #9aa3b5;
-      --gray-600:   #58637a;
-      --gray-800:   #2b3244;
-      --text:       #1a2233;
-      --ease:       all 0.3s ease;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ADPR 4+1 Program Planner — M.S. in Communication &amp; Information</title>
+<style>
+:root{
+  --navy:#0d1f3c; --navy-mid:#162952; --navy-light:#1e3a6b;
+  --gold:#c8a84b; --gold-lt:#e2c36e;
+  --bg:#f4f6fa; --surface:#ffffff; --surface-2:#f7f8fb;
+  --line:#dde1ea; --line-soft:#eef0f5;
+  --text:#1a2233; --muted:#58637a; --faint:#8a93a6;
+  --ok:#1c7a4f; --ok-bg:#e7f5ee;
+  --warn:#8a5a00; --warn-bg:#fdf3e0;
+  --err:#a32020; --err-bg:#fbeaea;
+  --info-bg:#eaf0fb;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(13,31,60,.06), 0 6px 20px rgba(13,31,60,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1220; --surface:#141d30; --surface-2:#1a2440;
+    --line:#2b3550; --line-soft:#222d47;
+    --text:#e6ebf5; --muted:#a3aec4; --faint:#7c879d;
+    --ok:#5fd39b;  --ok-bg:#123021;
+    --warn:#f0c069; --warn-bg:#33260d;
+    --err:#ff8f8f;  --err-bg:#3a1618;
+    --info-bg:#1b2743;
+    --navy:#0d1f3c; --navy-light:#7fa3e0;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 6px 20px rgba(0,0,0,.25);
+  }
+  .course.on{background:#16234a}
+  .course.overflow{background:#2b2413}
+  .elec-row.auto{background:#2b2413}
+  .card-hd h2{color:#dbe4f7}
+  .totals{background:#0a1428;border:1px solid var(--line)}
+  .verdict.ok{border-color:#1e5a3d}
+  .verdict.warn{border-color:#6b5320}
+  .verdict.err{border-color:#7a2f31}
+  .btn{background:var(--navy-light);color:#0b1220}
+  .btn:hover{background:#9dbcf0}
+  .btn.ghost{color:#cdd8ee}
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
 
-    /* ── Reset ─────────────────────────────────────────────────────── */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; font-size: 16px; }
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background: var(--white);
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-    }
+/* ── Header ─────────────────────────────────────────────── */
+header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);
+  color:#fff; padding:1.75rem 1.5rem 1.5rem;
+  border-bottom:3px solid var(--gold);
+}
+.hd-inner{max-width:1240px;margin:0 auto}
+header h1{font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+header h1 span{color:var(--gold-lt)}
+header p{color:#c3cde0;font-size:.9rem;margin-top:.35rem}
+.hd-note{
+  margin-top:.9rem;font-size:.8rem;color:#a9b7d0;
+  border-left:2px solid rgba(200,168,75,.5);padding-left:.7rem;max-width:62ch;
+}
 
-    /* ── Navigation ────────────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(13, 31, 60, 0.96);
-      backdrop-filter: blur(12px);
-      height: 62px;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      transition: box-shadow 0.3s;
-    }
-    .nav-brand {
-      font-family: 'Playfair Display', serif;
-      color: var(--white);
-      font-size: 1.05rem; font-weight: 700;
-      letter-spacing: 0.02em;
-      text-decoration: none;
-    }
-    .nav-brand span { color: var(--gold); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      color: rgba(255,255,255,0.72);
-      text-decoration: none;
-      font-size: 0.78rem; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
-      transition: var(--ease);
-    }
-    .nav-links a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+/* ── Layout ─────────────────────────────────────────────── */
+.wrap{max-width:1240px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:1.5rem;align-items:start}
+@media (max-width:980px){.wrap{grid-template-columns:minmax(0,1fr)}}
 
-    /* ── Hero ──────────────────────────────────────────────────────── */
-    .hero {
-      background: linear-gradient(140deg, var(--navy) 0%, var(--navy-mid) 55%, var(--navy-light) 100%);
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 110px 2.5rem 70px;
-      position: relative; overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; top: -30%; right: -15%;
-      width: 900px; height: 900px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,168,75,0.07) 0%, transparent 68%);
-      pointer-events: none;
-    }
-    .hero::after {
-      content: '';
-      position: absolute; bottom: -25%; left: -10%;
-      width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,168,75,0.04) 0%, transparent 68%);
-      pointer-events: none;
-    }
-    .hero-inner {
-      max-width: 1120px; margin: 0 auto; width: 100%;
-      position: relative; z-index: 1;
-      display: grid; grid-template-columns: 1fr auto; gap: 4rem; align-items: center;
-    }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(200,168,75,0.12);
-      border: 1px solid rgba(200,168,75,0.35);
-      color: var(--gold);
-      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 100px;
-      margin-bottom: 1.4rem;
-    }
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
-      color: var(--white); line-height: 1.08; font-weight: 700;
-      margin-bottom: 0.4rem;
-    }
-    .hero-subtitle {
-      font-size: 1.1rem; color: var(--gold); font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-    .hero-inst {
-      font-size: 0.92rem; color: rgba(255,255,255,0.65);
-    }
-    .hero-divider {
-      width: 56px; height: 3px;
-      background: var(--gold);
-      border-radius: 2px; margin: 1.6rem 0;
-    }
-    .hero-bio {
-      color: rgba(255,255,255,0.68);
-      font-size: 0.95rem; line-height: 1.85;
-      max-width: 560px; margin-bottom: 2rem;
-    }
-    .hero-meta { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2.2rem; }
-    .hero-meta-item {
-      display: flex; align-items: center; gap: 9px;
-      font-size: 0.85rem; color: rgba(255,255,255,0.6);
-    }
-    .hero-meta-item svg { color: var(--gold); flex-shrink: 0; }
-    .hero-meta-item a { color: inherit; text-decoration: none; transition: var(--ease); }
-    .hero-meta-item a:hover { color: var(--gold); }
-    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn-gold {
-      background: var(--gold); color: var(--navy);
-      padding: 11px 26px; border-radius: 6px;
-      font-size: 0.84rem; font-weight: 700; letter-spacing: 0.05em;
-      text-decoration: none; transition: var(--ease);
-    }
-    .btn-gold:hover {
-      background: var(--gold-lt);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(200,168,75,0.35);
-    }
-    .btn-ghost {
-      background: transparent; color: rgba(255,255,255,0.8);
-      padding: 11px 26px; border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.25);
-      font-size: 0.84rem; font-weight: 500; letter-spacing: 0.03em;
-      text-decoration: none; transition: var(--ease);
-    }
-    .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1.25rem;overflow:hidden}
+.card-hd{padding:.9rem 1.1rem;border-bottom:1px solid var(--line-soft);background:var(--surface-2);display:flex;flex-wrap:wrap;gap:.6rem;align-items:baseline;justify-content:space-between}
+.card-hd h2{font-size:1rem;font-weight:700;color:var(--navy)}
+.card-hd .sub{font-size:.8rem;color:var(--muted);font-weight:400}
+.card-bd{padding:1rem 1.1rem}
 
-    /* Hero badge panel */
-    .hero-panel {
-      display: flex; flex-direction: column; gap: 1rem;
-      flex-shrink: 0;
-    }
-    .hero-badge {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px; padding: 1.2rem 1.4rem;
-      text-align: center; min-width: 150px;
-      transition: var(--ease);
-    }
-    .hero-badge:hover {
-      background: rgba(200,168,75,0.1);
-      border-color: rgba(200,168,75,0.35);
-    }
-    .hero-badge-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; font-weight: 700; color: var(--gold); line-height: 1;
-    }
-    .hero-badge-lbl {
-      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: rgba(255,255,255,0.5); margin-top: 0.3rem;
-    }
+/* ── Pills / status ─────────────────────────────────────── */
+.pill{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:999px;white-space:nowrap;letter-spacing:.01em}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.err{background:var(--err-bg);color:var(--err)}
+.pill.idle{background:var(--line-soft);color:var(--muted)}
+.pill.elec{background:var(--info-bg);color:var(--navy-light)}
 
-    /* ── Gold bar ──────────────────────────────────────────────────── */
-    .gold-bar {
-      background: var(--gold); padding: 1.6rem 2.5rem;
-    }
-    .gold-bar-inner {
-      max-width: 1120px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(4,1fr);
-      gap: 1rem; text-align: center;
-    }
-    .gstat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; font-weight: 700; color: var(--navy); line-height: 1;
-    }
-    .gstat-lbl {
-      font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: rgba(13,31,60,0.6); margin-top: 0.25rem;
-    }
+/* ── Student info ───────────────────────────────────────── */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.85rem}
+label.fld{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+input[type=text],select{
+  width:100%;padding:.5rem .6rem;font:inherit;font-size:.9rem;color:var(--text);
+  background:var(--surface);border:1px solid var(--line);border-radius:6px;
+}
+input[type=text]:focus,select:focus{outline:2px solid var(--navy-light);outline-offset:1px;border-color:var(--navy-light)}
 
-    /* ── Shared section styles ─────────────────────────────────────── */
-    section { padding: 88px 2.5rem; }
-    .section-inner { max-width: 1120px; margin: 0 auto; }
-    .sh { margin-bottom: 3rem; }
-    .sh-label {
-      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700; margin-bottom: 0.4rem;
-    }
-    .sh-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 3vw, 2.4rem);
-      color: var(--navy); font-weight: 700;
-    }
-    .sh-line { width: 48px; height: 3px; background: var(--gold); border-radius: 2px; margin-top: 0.9rem; }
+/* ── Course rows ────────────────────────────────────────── */
+.course{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.75rem;align-items:start;
+  padding:.7rem .75rem;border:1px solid var(--line-soft);border-radius:8px;margin-bottom:.5rem;
+  background:var(--surface);transition:background .15s,border-color .15s;
+}
+.course:hover{background:var(--surface-2)}
+.course.on{border-color:var(--navy-light);background:#f6f9ff}
+.course.overflow{border-color:var(--gold);background:#fffdf5}
+/* Greyed out = unavailable to this student, and counts toward nothing. */
+.course.blocked{background:var(--surface-2);filter:grayscale(1);color:var(--faint)}
+.course.blocked .c-title{text-decoration:line-through;text-decoration-thickness:1px;color:var(--faint)}
+.course.blocked .c-code{color:var(--faint)}
+.course.blocked:hover{background:var(--surface-2)}
+.course.blocked input{cursor:not-allowed}
+.course.blocked .c-title{cursor:not-allowed}
+.course input[type=checkbox]:disabled{opacity:.4}
+.course input[type=checkbox]{width:18px;height:18px;margin-top:.15rem;accent-color:var(--navy-light);cursor:pointer}
+.c-main{min-width:0}
+.c-title{font-size:.9rem;font-weight:600;line-height:1.4}
+.c-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--navy-light);font-weight:700}
+.c-meta{font-size:.76rem;color:var(--faint);margin-top:.15rem}
+.c-flags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;align-items:center}
+.c-right{display:flex;gap:.4rem;align-items:flex-start}
+.c-right input{width:104px;font-size:.82rem;padding:.35rem .45rem}
+.c-right input.grade{width:62px}
+@media (max-width:640px){
+  .course{grid-template-columns:auto minmax(0,1fr)}
+  .c-right{grid-column:2;width:100%}
+  .c-right input{flex:1;width:auto}
+}
+.note{font-size:.76rem;color:var(--muted);margin-top:.15rem}
+.footnote{font-size:.76rem;color:var(--faint);margin-top:.75rem;padding-top:.6rem;border-top:1px dashed var(--line)}
 
-    /* ── Research Interests ────────────────────────────────────────── */
-    .research-section { background: var(--gray-50); }
-    .interests-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.4rem;
-    }
-    .interest-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 12px; padding: 1.6rem;
-      position: relative; overflow: hidden;
-      transition: var(--ease);
-    }
-    .interest-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0;
-      width: 4px; height: 100%;
-      background: var(--gold);
-    }
-    .interest-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 14px 40px rgba(0,0,0,0.08);
-      border-color: rgba(200,168,75,0.5);
-    }
-    .ic-icon { font-size: 1.6rem; margin-bottom: 0.7rem; }
-    .ic-title { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
-    .ic-desc { font-size: 0.82rem; color: var(--gray-600); line-height: 1.65; }
+/* ── Buttons ────────────────────────────────────────────── */
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid transparent;transition:background .15s,border-color .15s}
+.btn{padding:.45rem .8rem;font-size:.82rem;font-weight:600;background:var(--navy);color:#fff}
+.btn:hover{background:var(--navy-light)}
+.btn.ghost{background:transparent;color:var(--navy);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface-2);border-color:var(--navy-light)}
+.btn.tiny{padding:.18rem .5rem;font-size:.7rem;font-weight:700}
+.btn.danger{background:transparent;color:var(--err);border-color:var(--line)}
+.btn.danger:hover{background:var(--err-bg);border-color:var(--err)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.icon-btn{background:transparent;border:1px solid var(--line);color:var(--muted);width:30px;height:30px;font-size:1rem;line-height:1;display:grid;place-items:center;flex:none}
+.icon-btn:hover{border-color:var(--err);color:var(--err);background:var(--err-bg)}
 
-    /* Education cards */
-    .edu-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
-    .edu-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 10px; padding: 1.3rem 1.5rem;
-      display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
-      transition: var(--ease);
-    }
-    .edu-card:hover { border-color: rgba(200,168,75,0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-    .edu-degree {
-      font-size: 0.72rem; font-weight: 700; color: var(--gold);
-      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem;
-    }
-    .edu-school { font-size: 0.97rem; font-weight: 600; color: var(--navy); }
-    .edu-field { font-size: 0.84rem; color: var(--gray-600); margin-top: 0.1rem; }
-    .edu-year {
-      font-size: 1.1rem; font-weight: 700; color: var(--gray-400);
-      flex-shrink: 0; font-family: 'Playfair Display', serif;
-    }
+/* ── Elective rows ──────────────────────────────────────── */
+.elec-row{border:1px solid var(--line-soft);border-radius:8px;padding:.7rem .75rem;margin-bottom:.55rem;background:var(--surface)}
+.elec-row.auto{background:#fffdf5;border-color:var(--gold)}
+.elec-grid{display:grid;grid-template-columns:110px minmax(0,1fr) 70px 104px 62px auto;gap:.5rem;align-items:center}
+@media (max-width:820px){.elec-grid{grid-template-columns:110px minmax(0,1fr) auto}}
+.elec-grid input{font-size:.85rem;padding:.4rem .5rem}
+.elec-grid input.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;text-transform:uppercase}
+.mini-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:700;margin-bottom:.2rem;display:block}
+.sdc{display:flex;align-items:center;gap:.35rem;font-size:.76rem;color:var(--muted);margin-top:.5rem}
+.sdc input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer}
 
-    /* ── Publications ──────────────────────────────────────────────── */
-    .tab-nav {
-      display: flex; gap: 0;
-      border-bottom: 2px solid var(--gray-200);
-      margin-bottom: 2rem;
-      overflow-x: auto;
-    }
-    .tab-btn {
-      background: none; border: none; cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.82rem; font-weight: 600;
-      color: var(--gray-400);
-      padding: 0.7rem 1.4rem;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -2px;
-      transition: var(--ease);
-      white-space: nowrap;
-      letter-spacing: 0.02em;
-    }
-    .tab-btn:hover:not(.active) { color: var(--navy); }
-    .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
+/* ── Audit sidebar ──────────────────────────────────────── */
+.side{position:sticky;top:1.5rem}
+@media (max-width:980px){.side{position:static}}
+.audit-row{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--line-soft)}
+.audit-row:last-of-type{border-bottom:0}
+.audit-row .lbl{font-size:.84rem;font-weight:600}
+.audit-row .cnt{font-size:.74rem;color:var(--muted);font-weight:400;display:block}
+.bar{height:5px;background:var(--line-soft);border-radius:3px;overflow:hidden;margin-top:.4rem}
+.bar > i{display:block;height:100%;background:var(--navy-light);border-radius:3px;transition:width .3s ease}
+.bar > i.done{background:var(--ok)}
+.bar > i.over{background:var(--gold)}
 
-    .pub-list { display: flex; flex-direction: column; gap: 1rem; }
-    .pub-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 10px; padding: 1.4rem 1.6rem;
-      transition: var(--ease);
-    }
-    .pub-card:hover {
-      border-color: rgba(200,168,75,0.45);
-      box-shadow: 0 4px 22px rgba(0,0,0,0.06);
-    }
-    .pub-year {
-      font-size: 0.72rem; font-weight: 700; color: var(--gold);
-      letter-spacing: 0.12em; margin-bottom: 0.3rem;
-    }
-    .pub-title { font-size: 0.95rem; font-weight: 600; color: var(--navy); line-height: 1.5; margin-bottom: 0.25rem; }
-    .pub-title a { color: inherit; text-decoration: none; }
-    .pub-title a:hover { text-decoration: underline; text-underline-offset: 3px; color: var(--navy-mid); }
-    .pub-authors { font-size: 0.83rem; color: var(--gray-600); margin-bottom: 0.25rem; }
-    .pub-source { font-size: 0.82rem; color: var(--gray-600); font-style: italic; }
-    .pub-source em { font-style: normal; }
-    .pub-source strong { font-style: normal; font-weight: 600; color: var(--navy-mid); }
-    .pub-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: rgba(200,168,75,0.1);
-      border: 1px solid rgba(200,168,75,0.3);
-      color: #7a5c10;
-      font-size: 0.7rem; font-weight: 700;
-      padding: 2px 10px; border-radius: 100px;
-      margin-top: 0.5rem;
-    }
+.totals{background:var(--navy);color:#fff;border-radius:8px;padding:.9rem 1rem;margin-top:.9rem}
+.totals .big{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem;color:#c3cde0;padding:.25rem 0}
+.totals .big b{font-size:1.35rem;color:#fff;font-weight:700}
+.totals .big b.short{color:#ffb3b3}
+.totals .big b.met{color:var(--gold-lt)}
 
-    /* ── Awards ────────────────────────────────────────────────────── */
-    .awards-section { background: var(--navy); }
-    .awards-section .sh-title { color: var(--white); }
-    .awards-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 1.2rem;
-    }
-    .award-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 10px; padding: 1.4rem;
-      transition: var(--ease);
-    }
-    .award-card:hover {
-      background: rgba(200,168,75,0.09);
-      border-color: rgba(200,168,75,0.35);
-    }
-    .award-year {
-      font-size: 0.7rem; font-weight: 700; color: var(--gold);
-      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.4rem;
-    }
-    .award-name { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 0.3rem; }
-    .award-org { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+.verdict{margin-top:.9rem;border-radius:8px;padding:.8rem .9rem;font-size:.85rem;font-weight:600;line-height:1.5}
+.verdict.ok{background:var(--ok-bg);color:var(--ok);border:1px solid #b9e0cd}
+.verdict.warn{background:var(--warn-bg);color:var(--warn);border:1px solid #eed9a8}
+.verdict.err{background:var(--err-bg);color:var(--err);border:1px solid #edc0c0}
 
-    /* ── Teaching ──────────────────────────────────────────────────── */
-    .teaching-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-      gap: 1.5rem;
-    }
-    .teaching-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 12px; padding: 1.6rem;
-    }
-    .tc-title {
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--navy);
-      border-bottom: 2px solid var(--gold);
-      padding-bottom: 0.6rem; margin-bottom: 1rem;
-    }
-    .course-row {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      gap: 0.75rem; padding: 0.65rem 0;
-      border-bottom: 1px solid var(--gray-100);
-    }
-    .course-row:last-child { border-bottom: none; }
-    .course-code {
-      font-size: 0.68rem; font-weight: 700; color: var(--gold);
-      letter-spacing: 0.06em; margin-bottom: 0.15rem;
-    }
-    .course-name { font-size: 0.86rem; color: var(--navy); font-weight: 500; line-height: 1.4; }
-    .course-dates { font-size: 0.72rem; color: var(--gray-400); flex-shrink: 0; text-align: right; }
+.issues{list-style:none;margin-top:.7rem;font-size:.8rem}
+.issues li{padding:.45rem .55rem;border-radius:6px;margin-bottom:.35rem;line-height:1.45;border-left:3px solid}
+.issues li.e{background:var(--err-bg);color:var(--err);border-color:var(--err)}
+.issues li.w{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.issues li.i{background:var(--info-bg);color:var(--navy-light);border-color:var(--navy-light)}
+.issues li.g{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
 
-    /* ── Service ───────────────────────────────────────────────────── */
-    .service-section { background: var(--gray-50); }
-    .service-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-      gap: 1.4rem;
-    }
-    .service-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 12px; padding: 1.5rem;
-    }
-    .sc-title {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--navy);
-      border-bottom: 2px solid var(--gold);
-      padding-bottom: 0.6rem; margin-bottom: 0.9rem;
-    }
-    .sc-item {
-      font-size: 0.82rem; color: var(--gray-600);
-      padding: 0.38rem 0;
-      border-bottom: 1px solid var(--gray-100);
-      line-height: 1.5;
-    }
-    .sc-item:last-child { border-bottom: none; }
-    .sc-highlight { color: var(--navy); font-weight: 600; }
+.saved{font-size:.72rem;color:var(--faint);text-align:center;margin-top:.6rem;min-height:1em}
 
-    /* ── Contact ───────────────────────────────────────────────────── */
-    .contact-section {
-      background: linear-gradient(140deg, var(--navy) 0%, var(--navy-mid) 100%);
-      padding: 88px 2.5rem;
-      text-align: center;
-    }
-    .contact-section .sh-label { color: var(--gold); }
-    .contact-section .sh-title { color: var(--white); }
-    .contact-section .sh-line { margin: 0.9rem auto 0; }
-    .contact-grid {
-      display: flex; justify-content: center; flex-wrap: wrap;
-      gap: 3rem; margin-top: 3rem;
-    }
-    .contact-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
-    .ci-label {
-      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700;
-    }
-    .ci-value { font-size: 0.92rem; color: rgba(255,255,255,0.8); line-height: 1.6; }
-    .ci-value a { color: inherit; text-decoration: none; transition: var(--ease); }
-    .ci-value a:hover { color: var(--gold); }
-
-    /* ── Footer ────────────────────────────────────────────────────── */
-    footer {
-      background: #070e1c;
-      color: rgba(255,255,255,0.3);
-      text-align: center; padding: 1.4rem;
-      font-size: 0.78rem; letter-spacing: 0.02em;
-    }
-
-    /* ── Reveal animations ─────────────────────────────────────────── */
-    .reveal {
-      opacity: 0; transform: translateY(22px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-    .reveal.vis { opacity: 1; transform: translateY(0); }
-
-    /* ── Responsive ────────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-    }
-    @media (max-width: 720px) {
-      .nav-links { display: none; }
-      .gold-bar-inner { grid-template-columns: repeat(2,1fr); }
-      section { padding: 64px 1.5rem; }
-      nav { padding: 0 1.5rem; }
-    }
-    @media (max-width: 480px) {
-      .gold-bar-inner { grid-template-columns: repeat(2,1fr); gap: 0.6rem; }
-    }
-
-    /* ── Methodological Expertise ─────────────────────────────────── */
-    .expertise-section { background: var(--navy); }
-    .expertise-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.4rem;
-    }
-    .exp-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px; padding: 1.8rem;
-      transition: var(--ease);
-      position: relative; overflow: hidden;
-    }
-    .exp-card::before {
-      content: '';
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--gold);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.35s ease;
-    }
-    .exp-card:hover {
-      background: rgba(200,168,75,0.09);
-      border-color: rgba(200,168,75,0.4);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px rgba(0,0,0,0.25);
-    }
-    .exp-card:hover::before { transform: scaleX(1); }
-    .exp-icon {
-      width: 44px; height: 44px;
-      background: rgba(200,168,75,0.15);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.1rem;
-    }
-    .exp-icon svg { color: var(--gold); }
-    .exp-category {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--gold);
-      margin-bottom: 0.45rem;
-    }
-    .exp-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.08rem; font-weight: 700; color: var(--white);
-      line-height: 1.3; margin-bottom: 0.7rem;
-    }
-    .exp-desc {
-      font-size: 0.83rem; color: rgba(255,255,255,0.55);
-      line-height: 1.75;
-    }
-    .exp-tags {
-      display: flex; flex-wrap: wrap; gap: 0.4rem;
-      margin-top: 1.1rem;
-    }
-    .exp-tag {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.6);
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 3px 10px; border-radius: 100px;
-    }
-
-    /* ── Conference pagination ──────────────────────────────────────── */
-    .conf-item { display: none; }
-    .conf-item.visible { display: block; }
-    .conf-pagination {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0.6rem; margin-top: 2rem; flex-wrap: wrap;
-    }
-    .conf-pg-btn {
-      background: none; border: 1px solid var(--gray-300);
-      border-radius: 6px; padding: 0.4rem 0.85rem;
-      font-family: 'Inter', sans-serif; font-size: 0.8rem;
-      font-weight: 600; color: var(--navy-mid); cursor: pointer;
-      transition: var(--ease);
-    }
-    .conf-pg-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--navy); }
-    .conf-pg-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
-    .conf-pg-btn:disabled { opacity: 0.35; cursor: default; }
-    .conf-pg-info {
-      font-size: 0.78rem; color: var(--gray-500);
-      padding: 0 0.4rem;
-    }
-  </style>
+/* ── Print ──────────────────────────────────────────────── */
+@media print{
+  body{background:#fff}
+  header{background:#fff;color:#000;border-bottom:2px solid #000;padding:0 0 .5rem}
+  header h1,header h1 span{color:#000;font-size:14pt}
+  header p,.hd-note{color:#333}
+  .wrap{display:block;max-width:100%;padding:0}
+  .card{box-shadow:none;break-inside:avoid;border-color:#999}
+  .side{position:static}
+  .no-print{display:none !important}
+  .course,.elec-row{break-inside:avoid}
+  input[type=text],select{border:0;border-bottom:1px solid #666;border-radius:0}
+  .course:not(.on):not(.overflow){display:none}
+  .totals{background:#fff;color:#000;border:1px solid #000}
+  .totals .big,.totals .big b{color:#000}
+}
+</style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- NAV -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<nav id="navbar">
-  <a href="#home" class="nav-brand">Sifan <span>Xu</span></a>
-  <ul class="nav-links">
-    <li><a href="#research">Research</a></li>
-    <li><a href="#expertise">Expertise</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#awards">Awards</a></li>
-    <li><a href="#teaching">Teaching</a></li>
-    <li><a href="#service">Service</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- HERO -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section class="hero" id="home">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-tag">University of Tennessee, Knoxville</div>
-      <h1>Sifan Xu,<br>Ph.D.</h1>
-      <div class="hero-subtitle">Associate Professor &amp; Graduate Program Coordinator</div>
-      <div class="hero-inst">School of Advertising and Public Relations</div>
-      <div class="hero-inst">College of Communication and Information</div>
-      <div class="hero-divider"></div>
-      <p class="hero-bio">
-        Advancing scholarship at the intersection of crisis communication, corporate social responsibility, and social identity, with a focus on community-based approaches and socially mediated public engagement.
-      </p>
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <a href="mailto:sifanxu@utk.edu">sifanxu@utk.edu</a>
-        </div>
-        <div class="hero-meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.9a16 16 0 0 0 6.37 6.37l.71-.71a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          865-974-5135
-        </div>
-        <div class="hero-meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          1345 Circle Park Drive, Knoxville, TN 37996
-        </div>
-      </div>
-      <div class="hero-cta">
-        <a href="#publications" class="btn-gold">View Publications</a>
-        <a href="#contact" class="btn-ghost">Contact Me</a>
-      </div>
-    </div>
-
-    <div class="hero-panel">
-      <div class="hero-badge">
-        <div class="hero-badge-num">25+</div>
-        <div class="hero-badge-lbl">Journal Articles</div>
-      </div>
-      <div class="hero-badge">
-        <div class="hero-badge-num">40+</div>
-        <div class="hero-badge-lbl">Conf. Presentations</div>
-      </div>
-      <div class="hero-badge">
-        <div class="hero-badge-num">10+</div>
-        <div class="hero-badge-lbl">Awards</div>
-      </div>
-      <div class="hero-badge">
-        <div class="hero-badge-num">6+</div>
-        <div class="hero-badge-lbl">Years at UTK</div>
-      </div>
-    </div>
+<header>
+  <div class="hd-inner">
+    <h1>Program Planning Form · <span>ADPR 4+1 Concentration</span></h1>
+    <p>M.S. in Communication &amp; Information — Tombras School of Advertising &amp; Public Relations</p>
+    <p class="hd-note">Tick the courses you have taken (or plan to take). Extra selections in Blocks 1–3 roll
+      automatically into Block 4 as general electives. This planner is an unofficial advising aid — your
+      advisor's signature on the official form is what counts.</p>
   </div>
-</section>
+</header>
 
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- GOLD BAR -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<div class="gold-bar">
-  <div class="gold-bar-inner">
-    <div>
-      <div class="gstat-num">Ph.D.</div>
-      <div class="gstat-lbl">Univ. of Maryland, 2018</div>
-    </div>
-    <div>
-      <div class="gstat-num">PRR/JPRR</div>
-      <div class="gstat-lbl">Editorial Board Member</div>
-    </div>
-    <div>
-      <div class="gstat-num">ICA/NCA</div>
-      <div class="gstat-lbl">Multiple Top Paper Awards</div>
-    </div>
-    <div>
-      <div class="gstat-num">NSF</div>
-      <div class="gstat-lbl">Grant Applications</div>
-    </div>
-  </div>
+<div class="wrap">
+  <main>
+
+    <!-- ── Student info ─────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd"><h2>Student Information</h2></div>
+      <div class="card-bd">
+        <div class="grid2">
+          <div>
+            <label class="fld" for="f-name">Student Name &amp; ID</label>
+            <input type="text" id="f-name" data-save placeholder="Jane Doe · 000123456" />
+          </div>
+          <div>
+            <label class="fld" for="f-sem">Semester Entered</label>
+            <input type="text" id="f-sem" data-save placeholder="Fall 2025" />
+          </div>
+          <div>
+            <label class="fld" for="f-major">Undergraduate Major</label>
+            <select id="f-major" data-save>
+              <option value="">— select —</option>
+              <option value="advt">Advertising</option>
+              <option value="pbrl">Public Relations</option>
+              <option value="other">Other / outside ADPR</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem">
+          <span class="mini-label">Undergraduate courses already completed — the graduate equivalent is greyed out and counts toward nothing</span>
+          <div class="btn-row" style="gap:1rem;margin-top:.35rem">
+            <label class="sdc" style="margin:0"><input type="checkbox" id="pre-ADVT480" data-save /> ADVT 480</label>
+            <label class="sdc" style="margin:0"><input type="checkbox" id="pre-ADVT460" data-save /> ADVT 460</label>
+            <label class="sdc" style="margin:0"><input type="checkbox" id="pre-ADPR415" data-save /> ADPR 415</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Block 1 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 1 — Advertising &amp; Public Relations Courses
+          <span class="sub">select 4 · 12 hours</span></h2>
+        <span class="pill idle" id="p-b1">0 of 4</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-b1"></div>
+        <p class="footnote">
+          <sup>1</sup> ADVT 510 cannot be taken if ADVT 480 was already completed.
+          <sup>2</sup> ADVT 560 cannot be taken if ADVT 460 was already completed.<br />
+          Selections beyond the required four are counted as Block 4 general electives.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Block 2 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 2 — Additional Strategic Communication Courses
+          <span class="sub">select 1 · 3 hours</span></h2>
+        <span class="pill idle" id="p-b2">0 of 1</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-b2"></div>
+        <p class="footnote">
+          <sup>*</sup> ADPR 515 cannot be taken if ADPR 415 was already completed.
+          Selections beyond the required one are counted as Block 4 general electives.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Block 3 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 3 — Concept Application Courses
+          <span class="sub">select 1 · 3 hours</span></h2>
+        <span class="pill idle" id="p-b3">0 of 1</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-b3"></div>
+        <p class="footnote">
+          <sup>3</sup> Advertising undergraduate majors take PBRL 470S; Public Relations undergraduate majors
+          take ADVT 470. Both are 400-level and require advisor review when used as a Block 4 elective.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Block 4 ──────────────────────────────────────── -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>Block 4 — General Electives <span class="sub">select 4 · 12 hours</span></h2>
+        <span class="pill idle" id="p-b4">0 of 4</span>
+      </div>
+      <div class="card-bd">
+        <div id="list-auto"></div>
+        <div id="list-elec"></div>
+        <div class="btn-row no-print" style="margin-top:.6rem">
+          <button class="btn ghost" id="add-elec">+ Add elective</button>
+        </div>
+        <p class="footnote">
+          Any class carrying graduate credit from <b>ADPR, ADVT, PBRL, CMST, JREM, or INSC</b> may be used,
+          <b>except ADPR 541 and ADPR 542</b>. Courses below the 500 level are flagged for manual advisor
+          review. Electives from the SDC concentration need advisor approval and cannot exceed 6 credits
+          in total. Electives outside the College require the advisor's permission.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Audit sidebar ──────────────────────────────────── -->
+  <aside class="side">
+    <section class="card">
+      <div class="card-hd"><h2>Degree Audit</h2><span class="sub" id="audit-stamp"></span></div>
+      <div class="card-bd">
+        <div id="audit-blocks"></div>
+
+        <div class="totals">
+          <div class="big"><span>Courses entered</span><b id="t-courses">0</b></div>
+          <div class="big"><span>Credit hours</span><b id="t-hours">0</b></div>
+        </div>
+
+        <div class="verdict err" id="verdict">Nothing selected yet.</div>
+        <ul class="issues" id="issues"></ul>
+
+        <div class="btn-row no-print" style="margin-top:1rem">
+          <button class="btn" id="btn-print">Print / Save PDF</button>
+          <button class="btn ghost" id="btn-export">Export JSON</button>
+          <button class="btn ghost" id="btn-import">Import</button>
+          <button class="btn danger" id="btn-reset">Reset</button>
+        </div>
+        <input type="file" id="file-in" accept="application/json" hidden />
+        <p class="saved no-print" id="saved"></p>
+      </div>
+    </section>
+  </aside>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- RESEARCH INTERESTS + EDUCATION -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section class="research-section" id="research">
-  <div class="section-inner">
-    <div class="sh reveal">
-      <div class="sh-label">Scholarly Focus</div>
-      <h2 class="sh-title">Research Interests</h2>
-      <div class="sh-line"></div>
-    </div>
-
-    <div class="interests-grid">
-      <div class="interest-card reveal">
-        <div class="ic-title">Crisis & Risk Communication</div>
-        <div class="ic-desc">Community-based approaches to crisis management and risk communication: Examine how communities bond, cope, and construct meaning during disasters and organizational crises.</div>
-      </div>
-      <div class="interest-card reveal">
-        <div class="ic-title">Corporate Social Responsibility & Advocacy</div>
-        <div class="ic-desc">Corporate social responsibility and advocacy in charged contexts: Examine how organizations communicate purpose and impact to diverse, sometimes politically divided, stakeholder publics.</div>
-      </div>
-      <div class="interest-card reveal">
-        <div class="ic-title">Social Identity</div>
-        <div class="ic-desc">Identity-based frameworks for understanding organization-public relationships, including how identity salience and intergroup dynamics shape engagement and perceptions.</div>
-      </div>
-      <div class="interest-card reveal">
-        <div class="ic-title">Social-Mediated Engagement</div>
-        <div class="ic-desc">Digital public relations, media affordances, and social network analysis: Examine how social platforms shape activism, polarized discourse, and organization-public interactions.</div>
-      </div>
-    </div>
-
-    <!-- Education -->
-    <div style="margin-top:4rem;">
-      <div class="sh reveal">
-        <div class="sh-label">Academic Background</div>
-        <h2 class="sh-title">Education</h2>
-        <div class="sh-line"></div>
-      </div>
-      <div class="edu-grid reveal">
-        <div class="edu-card">
-          <div>
-            <div class="edu-degree">Ph.D. · Communication (Public Relations)</div>
-            <div class="edu-school">University of Maryland, College Park</div>
-            <div class="edu-field">Dissertation: <em>An Identity-Based Approach to Organization-Public Relationships and Interactions</em><br>
-            Committee: Gregory Hancock, Brooke Fisher Liu, Anita Atwell Seate, Erich Sommerfeldt (Chair), Elizabeth Toth</div>
-          </div>
-          <div class="edu-year">2018</div>
-        </div>
-        <div class="edu-card">
-          <div>
-            <div class="edu-degree">M.A. · Communication (Public Relations)</div>
-            <div class="edu-school">University of Maryland, College Park</div>
-          </div>
-          <div class="edu-year">2016</div>
-        </div>
-        <div class="edu-card">
-          <div>
-            <div class="edu-degree">B.A. · Culture and Communication</div>
-            <div class="edu-school">University of International Relations, Beijing</div>
-          </div>
-          <div class="edu-year">2013</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- METHODOLOGICAL EXPERTISE -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section class="expertise-section" id="expertise">
-  <div class="section-inner">
-    <div class="sh reveal">
-      <div class="sh-label" style="color:var(--gold)">Methods &amp; Tools</div>
-      <h2 class="sh-title" style="color:var(--white)">Methodological Expertise</h2>
-      <div class="sh-line"></div>
-    </div>
-
-    <div class="expertise-grid">
-
-      <!-- Computational Analysis -->
-      <div class="exp-card reveal">
-        <div class="exp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div class="exp-category">Computational Analysis</div>
-        <div class="exp-title">Text, Image &amp; Network Analysis</div>
-        <div class="exp-desc">Automated analysis of large-scale digital corpora, mapping relational structures in networks, and leveraging large language models for content understanding.</div>
-        <div class="exp-tags">
-          <span class="exp-tag">Text Analysis</span>
-          <span class="exp-tag">(Structural) Topic Modeling</span>
-          <span class="exp-tag">Image Analysis</span>
-          <span class="exp-tag">Large Language Models</span>
-          <span class="exp-tag">Network Analysis</span>
-        </div>
-      </div>
-
-      <!-- Quantitative Analysis -->
-      <div class="exp-card reveal">
-        <div class="exp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        </div>
-        <div class="exp-category">Quantitative Analysis</div>
-        <div class="exp-title">Advanced Statistical Modeling</div>
-        <div class="exp-desc">Rigorous hypothesis testing through conjoint analysis to model preference trade-offs, structural equation modeling for latent-variable frameworks, and time series analysis to track changes over time.</div>
-        <div class="exp-tags">
-          <span class="exp-tag">Conjoint Analysis</span>
-          <span class="exp-tag">Structural Equation Modeling</span>
-          <span class="exp-tag">Time Series Analysis</span>
-        </div>
-      </div>
-
-      <!-- Social Network Analysis -->
-      <div class="exp-card reveal">
-        <div class="exp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </div>
-        <div class="exp-category">Social Network Analysis</div>
-        <div class="exp-title">Relational &amp; Community Structure</div>
-        <div class="exp-desc">Mapping information flows, influence networks, and community formation in digital and organizational contexts. Identify key actors, structural holes, and the dynamics of polarized discourse across social platforms.</div>
-        <div class="exp-tags">
-          <span class="exp-tag">Network Mapping</span>
-          <span class="exp-tag">Community Detection</span>
-          <span class="exp-tag">Influence Analysis</span>
-        </div>
-      </div>
-
-      <!-- Experimental Design -->
-      <div class="exp-card reveal">
-        <div class="exp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
-        </div>
-        <div class="exp-category">Experimental Design</div>
-        <div class="exp-title">Controlled Causal Inference</div>
-        <div class="exp-desc">Designing and executing survey experiments to establish causal relationships.</div>
-        <div class="exp-tags">
-          <span class="exp-tag">Survey Experiments</span>
-          <span class="exp-tag">Factorial Design</span>
-          <span class="exp-tag">Causal Inference</span>
-        </div>
-      </div>
-
-      <!-- Qualitative Analysis -->
-      <div class="exp-card reveal">
-        <div class="exp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        </div>
-        <div class="exp-category">Qualitative Analysis</div>
-        <div class="exp-title">Interpretive &amp; Inductive Inquiry</div>
-        <div class="exp-desc">In-depth interpretive methods to uncover the lived experiences, meaning-making processes, and institutional dynamics.</div>
-        <div class="exp-tags">
-          <span class="exp-tag">Thematic Coding</span>
-          <span class="exp-tag">Discourse Analysis</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- PUBLICATIONS -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section id="publications">
-  <div class="section-inner">
-    <div class="sh reveal">
-      <div class="sh-label">Scholarship</div>
-      <h2 class="sh-title">Publications</h2>
-      <div class="sh-line"></div>
-    </div>
-
-    <div class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab(event,'pubs-journal')">Peer-Reviewed Articles</button>
-      <button class="tab-btn" onclick="switchTab(event,'pubs-chapters')">Book Chapters</button>
-      <button class="tab-btn" onclick="switchTab(event,'pubs-conf')">Conference Presentations</button>
-    </div>
-
-    <!-- JOURNAL ARTICLES -->
-    <div id="pubs-journal" class="tab-pane active">
-      <div class="pub-list reveal">
-
-        <div class="pub-card">
-          <div class="pub-year">2026</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2026.102667" target="_blank" rel="noopener noreferrer">Mapping stakeholder expectations along organizational outcomes: How familiarity and sentiment shape core and peripheral issue priorities</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 52(1), 102667</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2025</div>
-          <div class="pub-title"><a href="https://doi.org/10.1177/00936502241234011" target="_blank" rel="noopener noreferrer">The impact of supervisory communication on newcomers' adjustment, well-being, and relationships with their organization: A longitudinal study</a></div>
-          <div class="pub-authors">Yue, C. A., Xu, S., Tao, W., &amp; Huang, L. V.</div>
-          <div class="pub-source"><strong>Communication Research</strong></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2024</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2024.102451" target="_blank" rel="noopener noreferrer">How political ideology affects the communication of organizational relations: A social network approach</a></div>
-          <div class="pub-authors">You, L., Zhao, X., &amp; Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 50(2), 102451</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2024</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2024.102430" target="_blank" rel="noopener noreferrer">A temporal approach to online discussion during disasters: Applying SIR infectious disease model to predict topic growth and examining effects of temporal distance</a></div>
-          <div class="pub-authors">Xu, S., Zhao, X., &amp; Chen, J.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 50(2), 102430</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2024</div>
-          <div class="pub-title"><a href="https://doi.org/10.1177/146144482210888" target="_blank" rel="noopener noreferrer">Medium and source convergence in crisis information acquisition: Patterns, antecedents, and outcomes</a></div>
-          <div class="pub-authors">Zhao, X., Xu, S., &amp; Austin, L. L.</div>
-          <div class="pub-source"><strong>New Media &amp; Society</strong>, 26(5), 2492–2513</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2024</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2023.102421" target="_blank" rel="noopener noreferrer">Connecting issues, CSR, and OPRs: Unpacking identity mediators of the effect of CSR on relationship and the moderating role of intergroup dynamics</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 50(1), 102421</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2024</div>
-          <div class="pub-title"><a href="https://doi.org/10.1080/10410236.2022.2154017" target="_blank" rel="noopener noreferrer">How information repertoire affects vaccine hesitancy: Processes of information verification and cognitive elaboration</a></div>
-          <div class="pub-authors">Zhao, X., Ma, Z., Xu, S., &amp; Austin, L. L.</div>
-          <div class="pub-source"><strong>Health Communication</strong>, 39(1), 62–72</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2023</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2023.102295" target="_blank" rel="noopener noreferrer">A personal-communicative evaluation approach to CEO advocacy &amp; employee relations</a></div>
-          <div class="pub-authors">Cho, M., Xu, S., &amp; Boatwright, B.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 49(2), 102295</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2023</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2022.102274" target="_blank" rel="noopener noreferrer">Issue contention and consumers' reactions to corporate social responsibility: Challenging the dyadic assumptions</a></div>
-          <div class="pub-authors">Xu, S., &amp; Cho, M.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 49(1), 102274</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2023</div>
-          <div class="pub-title"><a href="https://doi.org/10.1080/00909882.2022.2114294" target="_blank" rel="noopener noreferrer">Crisis factors, emotions, and perceived informational channel significance during emergencies</a></div>
-          <div class="pub-authors">Xu, S., &amp; Yue, C.</div>
-          <div class="pub-source"><strong>Journal of Applied Communication Research</strong>, 51(2), 204–223</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2022</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2022.102176" target="_blank" rel="noopener noreferrer">Computer mediation vs. dialogic communication: How media affordances affect organization-public relationship building</a></div>
-          <div class="pub-authors">Zhou, A., &amp; Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 48(2), 102176</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2022</div>
-          <div class="pub-title"><a href="https://doi.org/10.1177/08933189221095770" target="_blank" rel="noopener noreferrer">Key players in corporate social responsibility (CSR) institutionalization: An analysis of multinational companies' interorganizational positioning via CSR reports</a></div>
-          <div class="pub-authors">Xu, S., &amp; Woo, D.</div>
-          <div class="pub-source"><strong>Management Communication Quarterly</strong></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2022</div>
-          <div class="pub-title"><a href="https://ijoc.org/index.php/ijoc/article/view/17832" target="_blank" rel="noopener noreferrer">Motivated responsibility attribution in a pandemic: Roles of political orientation, perceived severity, and construal level</a></div>
-          <div class="pub-authors">Zhao, X., Tsang, S. J., &amp; Xu, S.</div>
-          <div class="pub-source"><strong>International Journal of Communication</strong>, 16, 2260–2282</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2021</div>
-          <div class="pub-title"><a href="https://doi.org/10.1080/1062726X.2022.2046585" target="_blank" rel="noopener noreferrer">Digital public relations through the lens of affordances: A conceptual expansion of the dialogic principles</a></div>
-          <div class="pub-authors">Zhou, A., &amp; Xu, S.</div>
-          <div class="pub-source"><strong>Journal of Public Relations Research</strong>, 33(6), 445–463</div>
-          <div><span class="pub-badge">★ Top Faculty Paper — ICA</span></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2021</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2021.102110" target="_blank" rel="noopener noreferrer">Engaging through stories: Effects of narratives on individuals' skepticism toward corporate social responsibility efforts</a></div>
-          <div class="pub-authors">Xu, S., &amp; Kochigina, A.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 47(5), 102110</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2020</div>
-          <div class="pub-title"><a href="https://doi.org/10.1177/1461444820954200" target="_blank" rel="noopener noreferrer">Networked publics in #NoDAPL protests: Interactions among activist publics and influence of locality and proximity on socially mediated networks</a></div>
-          <div class="pub-authors">Xu, S., &amp; Luttman, S.</div>
-          <div class="pub-source"><strong>New Media &amp; Society</strong></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2020</div>
-          <div class="pub-title"><a href="https://doi.org/10.1080/1062726X.2020.1802731" target="_blank" rel="noopener noreferrer">Issues, identity salience, and individual sense of connection to organizations: An identity-based approach</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Journal of Public Relations Research</strong>, 32(3–4), 120–139</div>
-          <div><span class="pub-badge">★ Robert Heath Top Paper Award — ICA 2019</span></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2020</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2020.101959" target="_blank" rel="noopener noreferrer">Setting socially mediated engagement parameters: A topic modeling and text analytic approach to examining polarized discourses on Gillette's campaign</a></div>
-          <div class="pub-authors">Xu, S., &amp; Ying, X.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 46(5), 101959</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2020</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.chb.2019.08.006" target="_blank" rel="noopener noreferrer">Hashtag homophily in twitter network: Examining a controversial cause-related marketing campaign</a></div>
-          <div class="pub-authors">Xu, S., &amp; Zhou, A.</div>
-          <div class="pub-source"><strong>Computers in Human Behavior</strong>, 120, 87–96</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2019</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2019.05.003" target="_blank" rel="noopener noreferrer">Prioritizing relationships: The investment model and relationship maintenance strategies in organizational crises</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 45(3), 101782</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2019</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2019.101831" target="_blank" rel="noopener noreferrer">How publics' active and passive communicative behaviors affect their tornado responses: An integration of STOPS and SMCC</a></div>
-          <div class="pub-authors">Liu, B. F., Xu, S., Lim, J. R., &amp; Egnoto, M.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2019</div>
-          <div class="pub-title"><a href="https://journalofpreducation.com/wp-content/uploads/2022/12/c4f26-jpre-52-full-issue.pdf#page=112" target="_blank" rel="noopener noreferrer">Empowering the future practitioner: Postmodernism in the undergraduate public relations classroom</a></div>
-          <div class="pub-authors">Madden, S., Brown, K., &amp; Xu, S.</div>
-          <div class="pub-source"><strong>Journal of Public Relations Education</strong>, 5(2), 105–131</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2018</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2017.09.005" target="_blank" rel="noopener noreferrer">Discourse of renewal: Developing multiple-item measurement and analyzing effects on relationships</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 44, 108–119</div>
-          <div><span class="pub-badge">★ 1st Place Top Student Paper — ICA 2017</span></div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2018</div>
-          <div class="pub-title"><a href="https://doi.org/10.1016/j.pubrev.2017.10.004" target="_blank" rel="noopener noreferrer">Crisis communication within a community: Bonding, coping, and making sense together</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Public Relations Review</strong>, 44, 84–97</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2018</div>
-          <div class="pub-title"><a href="https://doi.org/10.1111/1468-5973.12219" target="_blank" rel="noopener noreferrer">When individual cultural orientation and mediated portrayal of risk intersect: Effects of individualism-collectivism and media framing on risk perception and attribution of responsibility</a></div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source"><strong>Journal of Contingencies and Crisis Management</strong>, 26, 499–509</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2017</div>
-          <div class="pub-title"><a href="https://doi.org/10.1080/17544750.2016.1210184" target="_blank" rel="noopener noreferrer">Making a "difference" with digital media? The evaluation perspectives, practices, and challenges of Chinese NGOs</a></div>
-          <div class="pub-authors">Sommerfeldt, E. J., &amp; Xu, S.</div>
-          <div class="pub-source"><strong>Chinese Journal of Communication</strong>, 10, 89–107</div>
-        </div>
-
-      </div>
-    </div><!-- /pubs-journal -->
-
-    <!-- BOOK CHAPTERS -->
-    <div id="pubs-chapters" class="tab-pane">
-      <div class="pub-list reveal">
-
-        <div class="pub-card">
-          <div class="pub-year">In Press</div>
-          <div class="pub-title">Affordance and social-mediated crisis communication</div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source">In L. Austin &amp; B. F. Liu (Eds.), <strong>Social Media and Crisis Communication</strong> (3rd ed.). Routledge.</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">In Press</div>
-          <div class="pub-title">Corporate social advocacy (CSA) and social network: Understanding CSA through intergroup dynamics and social networks</div>
-          <div class="pub-authors">Xu, S.</div>
-          <div class="pub-source">In Y. Lee, J. Y. Li, &amp; W. Tao (Eds.), <strong>Strategic Communication for Corporate Social Advocacy</strong>. Palgrave Macmillan.</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2016</div>
-          <div class="pub-title">Public relations and development: Ethical perspectives on communication for societal effectiveness</div>
-          <div class="pub-authors">Kennedy, A. K., Xu, S., &amp; Sommerfeldt, E. J.</div>
-          <div class="pub-source">In B. R. Brunner (Ed.), <strong>The Moral Compass of Public Relations</strong>. Routledge.</div>
-        </div>
-
-        <div class="pub-card">
-          <div class="pub-year">2015</div>
-          <div class="pub-title">Legitimation strategies in radical activist issues management: Congressional testimony of the AIDS Coalition to Unleash Power (ACT UP)</div>
-          <div class="pub-authors">Sommerfeldt, E. J. &amp; Xu, S.</div>
-          <div class="pub-source">In R. D. Waters (Ed.), <strong>Public Relations in the Nonprofit Sector: Theory and Practice</strong> (pp. 185–202). Routledge.</div>
-        </div>
-
-      </div>
-    </div><!-- /pubs-chapters -->
-
-    <!-- CONFERENCES -->
-    <div id="pubs-conf" class="tab-pane">
-      <div class="pub-list reveal" id="conf-list">
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">September 2025 · EUPRERA Congress, Lund, Sweden</div>
-          <div class="pub-title">How companies communicate social responsibility, impact, and purpose: Evidence from top S&amp;P 500 companies' communications</div>
-          <div class="pub-authors">Xu, S., Chang, B., &amp; Kim, K.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">June 2025 · ICA, Denver, CO — Public Relations Division</div>
-          <div class="pub-title">Implications of intergroup dynamics on organization-public outcomes: An identity and intergroup perspective</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">June 2025 · ICA, Denver, CO — Public Relations Division</div>
-          <div class="pub-title">Consolidating CSR and CSA quantitative research in public relations through a network analysis of theoretical variables</div>
-          <div class="pub-authors">Xu, S., &amp; Luttman, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2024 · AEJMC, Philadelphia, PA — Communicating Science, Health, Environment, Risk Division</div>
-          <div class="pub-title">Convergence and social media use in risk perception: An investigation on both central tendency and dispersion</div>
-          <div class="pub-authors">Xu, S., &amp; Zhao, X.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">June 2024 · ICA, Gold Coast, Australia — Public Relations Division</div>
-          <div class="pub-title">Stakeholder analysis for strategic communication: Using computational text analysis of qualitative data</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2023 · AEJMC, Washington D.C. — Public Relations Division</div>
-          <div class="pub-title">How political ideology affects the communication of organizational relations: A social network approach</div>
-          <div class="pub-authors">You, L., Zhao, X., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2023 · ICA, Toronto, Canada — Computational Methods Division</div>
-          <div class="pub-title">A temporal approach to online discussion during disasters: Applying SIR infectious disease model to predict topic growth and examining effects of temporal distance</div>
-          <div class="pub-authors">Xu, S., Zhao, X., &amp; Chen, J.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">March 2023 · International Public Relations Research Conference, Orlando, FL</div>
-          <div class="pub-title">Keeping employees during the great resignation: The impact of leadership communication on newcomer adjustment, well-being, and employee-organization relationships</div>
-          <div class="pub-authors">Cen, Y., Xu, S., Wei, T., &amp; Huang, V.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2022 · NCA, New Orleans, LA — Public Relations Division</div>
-          <div class="pub-title">Connecting issues, CSR, and OPRs: Unpacking identity mediators of the effect of CSR on relationship and the moderating role of intergroup dynamics</div>
-          <div class="pub-authors">Xu, S.</div>
-          <div><span class="pub-badge">★ 2nd Place Top Faculty Paper Award — NCA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2022 · ICA, Paris, France — Mass Communication Division</div>
-          <div class="pub-title">Who influences whom? Time series analysis on COVID digital news coverage, tweets volume, and crisis severity</div>
-          <div class="pub-authors">Xu, S., &amp; Cen, Y.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2022 · ICA, Paris, France — Information Systems Division</div>
-          <div class="pub-title">How information repertoire affects vaccine hesitancy: Processes of information verification and cognitive elaboration</div>
-          <div class="pub-authors">Zhao, X., Ma, Z., Xu, S., &amp; Austin, L.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2022 · ICA, Paris, France — Mass Communication Division</div>
-          <div class="pub-title">Medium and source convergence in crisis information acquisition: Patterns, antecedents, and outcomes</div>
-          <div class="pub-authors">Zhao, X., Xu, S., &amp; Austin, L.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2021 · NCA, Seattle, WA — Mass Communication Division</div>
-          <div class="pub-title">An ecological and dynamic convergence framework for disaster and emergency communication</div>
-          <div class="pub-authors">Xu, S., &amp; Zhao, X.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">September 2021 · IEEE ISPA-BDCloud-SocialCom-SustainCom</div>
-          <div class="pub-title">Using content analysis and machine learning to identify COVID-19 information relevant to low-income households on social media</div>
-          <div class="pub-authors">Khanal, S., Refati, R., Glandt, K., Caragea, D., Xu, S., &amp; Chen, C. F.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2021 · AEJMC, New Orleans, LA — Communicating Science, Health, Environment, Risk Division</div>
-          <div class="pub-title">Embedded contexts and multilayered interactions: User comments and interactions analysis on YouTube related to climate change</div>
-          <div class="pub-authors">Xu, S., Kochigina, A., &amp; Luttman, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2021 · ICA, Denver, CO — Organizational Communication Division</div>
-          <div class="pub-title">Key players in CSR institutionalization: An interorganizational network investigation through Fortune Global 500 companies' CSR reports</div>
-          <div class="pub-authors">Xu, S., &amp; Woo, D. J.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2021 · ICA, Denver, CO — Public Relations Division</div>
-          <div class="pub-title">Is mediated dialogue dead yet? How media affordances affect organization-public relationship building</div>
-          <div class="pub-authors">Zhou, Y., &amp; Xu, S.</div>
-          <div><span class="pub-badge">★ Top Faculty Paper — ICA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2021 · ICA, Denver, CO — Public Relations Division</div>
-          <div class="pub-title">Motivated responsibility attribution in pandemic: An integrated framework of antecedents, processes and outcomes</div>
-          <div class="pub-authors">Zhao, X., Tsang, S. J., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2020 · AEJMC, San Francisco, CA — Public Relations Division</div>
-          <div class="pub-title">Effects of narratives on individuals' skepticism toward corporate social responsibility efforts</div>
-          <div class="pub-authors">Xu, S., &amp; Kochigina, A.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2020 · AEJMC, San Francisco, CA — Public Relations Division</div>
-          <div class="pub-title">CEO activism &amp; employee relations: Factors affecting employees' sense of belonging in workplace</div>
-          <div class="pub-authors">Cho, M., Xu, S., &amp; Boatwright, B.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">July 2020 · Sunbelt Conference, INSNA, Paris, France</div>
-          <div class="pub-title">Seeking like-minded people: Twitter users' homophily based on ideological hashtags</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2020 · ICA, Gold Coast, Australia — Environmental Communication Division</div>
-          <div class="pub-title">Networked publics in #NoDAPL protests: Interactions among activist publics and influence of locality and proximity on socially mediated networks</div>
-          <div class="pub-authors">Xu, S., &amp; Luttman, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2020 · ICA, Gold Coast, Australia — Public Relations Division</div>
-          <div class="pub-title">Threat and consumer behavior: Effects of threat on consumers' engagement with corporate social responsibility</div>
-          <div class="pub-authors">Xu, S., &amp; Cho, M.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2020 · ICA, Gold Coast, Australia — Public Relations Division</div>
-          <div class="pub-title">Is telling a story better? Effects of narrative engagement on CSR skepticism</div>
-          <div class="pub-authors">Kochigina, A., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2019 · NCA, Baltimore, MD — Public Relations Division</div>
-          <div class="pub-title">A topic modeling approach to examining Twitter users' discourses and reactions to cause-related marketing</div>
-          <div class="pub-authors">Xu, S., &amp; Xiong, Y.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2019 · ICA, Washington, D.C. — Public Relations Division</div>
-          <div class="pub-title">Remaking dialogic principles for the digital Age: The role of affordances in dialogue and engagement</div>
-          <div class="pub-authors">Zhou, A. Y., &amp; Xu, S.</div>
-          <div><span class="pub-badge">★ Top Faculty Paper — ICA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2019 · ICA, Washington, D.C. — Public Relations Division</div>
-          <div class="pub-title">Issues, identity salience, and organization-public interactions: An identity-based approach</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">March 2019 · International Public Relations Research Conference, Orlando, FL</div>
-          <div class="pub-title">When environmental issues are political: Effects of political identity salience and organization's environmental communication on public engagement</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2018 · NCA, Salt Lake City, UT — Public Relations Division</div>
-          <div class="pub-title">Bigger playground, better dialogues? A large-scale examination of corporate Twitter communication in the 280-character era</div>
-          <div class="pub-authors">Zhou, A. Y., &amp; Xu, S.</div>
-          <div><span class="pub-badge">★ 1st Place Top Student Paper — NCA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2018 · ICA, Prague, Czech Republic — Public Relations Division</div>
-          <div class="pub-title">Catching up on crisis: Effects of crisis attributes on emotions and information channel preferences</div>
-          <div class="pub-authors">Xu, S., &amp; Yue, C.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2018 · ICA, Prague, Czech Republic — Public Relations Division</div>
-          <div class="pub-title">Crisis communication within a community: Bonding, coping, and making sense together</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2017 · NCA, Dallas, TX — Interpersonal Communication Division</div>
-          <div class="pub-title">Questioning my love is questioning my face: An analysis of facework strategies by interracial and interethnic couples in Taiwan</div>
-          <div class="pub-authors">Chien, H. Y., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2017 · ICA, San Diego, CA — Public Relations Division</div>
-          <div class="pub-title">We won't if you won't damage the relationship: The investment model in organizational crises for (re)building relationships</div>
-          <div class="pub-authors">Xu, S.</div>
-          <div><span class="pub-badge">★ Top Student Paper — ICA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2017 · ICA, San Diego, CA — Public Relations Division</div>
-          <div class="pub-title">Discourse of renewal: Developing multiple-item measurement and analyzing effects on relationships</div>
-          <div class="pub-authors">Xu, S.</div>
-          <div><span class="pub-badge">★ 1st Place Top Student Paper — ICA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2016 · NCA, Philadelphia, PA — Public Relations Division</div>
-          <div class="pub-title">When identity becomes salient and connected to the organization: We are in this together</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2016 · NCA, Philadelphia, PA</div>
-          <div class="pub-title">Making a "difference" with digital media? The evaluation perspectives, practices, and challenges of Chinese NGOs</div>
-          <div class="pub-authors">Sommerfeldt, E. J., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2016 · AEJMC, Minneapolis, MN</div>
-          <div class="pub-title">Empowering the future practitioner: Postmodernism in the undergraduate public relations classroom</div>
-          <div class="pub-authors">Madden, S., Brown, K., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">April 2016 · Eastern Communication Association, Baltimore, MD — Organizational Communication Interest Group</div>
-          <div class="pub-title">A societal turn for organizations: Unpacking societal dimensions of public relations strategy</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2015 · NCA, Las Vegas, NV — Public Relations Division</div>
-          <div class="pub-title">Empowering them is empowering us: Activist public relations from a non-system perspective</div>
-          <div class="pub-authors">Xu, S.</div>
-          <div><span class="pub-badge">★ Top Student Paper — NCA PR Division</span></div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2015 · NCA, Las Vegas, NV — Public Relations Division</div>
-          <div class="pub-title">A voice unheard: Community building of international students in crises</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">August 2015 · AEJMC, San Francisco, CA — Public Relations Division</div>
-          <div class="pub-title">Public relations as development communication? Conceptual overlaps and prospects for a societal paradigm of public relations</div>
-          <div class="pub-authors">Brown, K., Fowler, B. M., Guo, J., Sommerfeldt, E. J., Tills, C., &amp; Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2015 · ICA, San Juan, Puerto Rico — Public Relations Division</div>
-          <div class="pub-title">Risk amplification from an intercultural perspective</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">May 2015 · ICA, San Juan, Puerto Rico — Public Relations Division</div>
-          <div class="pub-title">Strategy of outlaw discourse in building civil society</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-        <div class="pub-card conf-item">
-          <div class="pub-year">November 2014 · NCA, Chicago, IL — Public Relations Division</div>
-          <div class="pub-title">A case study: Symbiotic relationship between actional legitimacy and corporate social responsibility</div>
-          <div class="pub-authors">Xu, S.</div>
-        </div>
-
-      </div>
-
-      <div class="conf-pagination" id="conf-pagination"></div>
-    </div><!-- /pubs-conf -->
-
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- AWARDS -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section class="awards-section" id="awards">
-  <div class="section-inner">
-    <div class="sh reveal">
-      <div class="sh-label">Recognition</div>
-      <h2 class="sh-title">Awards &amp; Honors</h2>
-      <div class="sh-line"></div>
-    </div>
-    <div class="awards-grid">
-
-      <div class="award-card reveal">
-        <div class="award-year">2023</div>
-        <div class="award-name">Faculty Research Award</div>
-        <div class="award-org">College of Communication and Information, University of Tennessee Knoxville</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2022</div>
-        <div class="award-name">Top Faculty Paper — 2nd Place</div>
-        <div class="award-org">Public Relations Division, National Communication Association</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2021</div>
-        <div class="award-name">Top Faculty Paper</div>
-        <div class="award-org">Public Relations Division, International Communication Association</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2021</div>
-        <div class="award-name">Dean's Summer Research Support ($1,200)</div>
-        <div class="award-org">College of Communication and Information, University of Tennessee Knoxville</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2020</div>
-        <div class="award-name">Best Poster Presentation</div>
-        <div class="award-org">42nd Annual Research Symposium, College of Communication and Information, UTK</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2020</div>
-        <div class="award-name">Dean's Summer Research Support ($1,000)</div>
-        <div class="award-org">College of Communication and Information, University of Tennessee Knoxville</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2019</div>
-        <div class="award-name">Top Faculty Paper / Robert Heath Top Paper Award</div>
-        <div class="award-org">Public Relations Division, International Communication Association</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2019</div>
-        <div class="award-name">Dean's Summer Research Support ($1,500)</div>
-        <div class="award-org">College of Communication and Information, University of Tennessee Knoxville</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2018</div>
-        <div class="award-name">Top Student Paper</div>
-        <div class="award-org">Public Relations Division, National Communication Association</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2017</div>
-        <div class="award-name">2 Top Student Papers · Summer Research Fellowship ($5,000)</div>
-        <div class="award-org">ICA PR Division · Graduate School, University of Maryland</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2015</div>
-        <div class="award-name">Top Student Paper · ARHU Travel Award</div>
-        <div class="award-org">NCA PR Division · College of Arts and Humanities, University of Maryland</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2013</div>
-        <div class="award-name">Merit Fellowship · Distinguished Senior Thesis</div>
-        <div class="award-org">Department of Communication, UMD · University of International Relations</div>
-      </div>
-
-      <div class="award-card reveal">
-        <div class="award-year">2011–2012</div>
-        <div class="award-name">Departmental Scholarship · Outstanding Student Award</div>
-        <div class="award-org">Department of Culture and Communication, University of International Relations</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- TEACHING -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section id="teaching">
-  <div class="section-inner">
-    <div class="sh reveal">
-      <div class="sh-label">Pedagogy</div>
-      <h2 class="sh-title">Teaching Experience</h2>
-      <div class="sh-line"></div>
-    </div>
-    <div class="teaching-grid">
-
-      <div class="teaching-card reveal">
-        <div class="tc-title">Graduate Courses — UTK</div>
-        <div class="course-row">
-          <div><div class="course-code">CCI 644</div><div class="course-name">Quant. Comm and Inf Res. II Computational Social Science</div></div>
-          <div class="course-dates">2026</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">PBRL 530</div><div class="course-name">Issues and Crisis Management</div></div>
-          <div class="course-dates">2023–2026</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">PBRL 516</div><div class="course-name">PR Publics, Activism, &amp; Social Change</div></div>
-          <div class="course-dates">Fall 2022</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">ADPR 541</div><div class="course-name">Strategic Communication Tactics<br><small style="color:var(--gray-400)">(Asynchronous Online — Course Developer)</small></div></div>
-          <div class="course-dates">2021–2022</div>
-        </div>
-      </div>
-
-      <div class="teaching-card reveal">
-        <div class="tc-title">Undergraduate Courses — UTK</div>
-        <div class="course-row">
-          <div><div class="course-code">PBRL 370</div><div class="course-name">Public Relations Cases</div></div>
-          <div class="course-dates">2019–2025</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">PBRL 420</div><div class="course-name">Advanced Public Relations Writing</div></div>
-          <div class="course-dates">2018–2024</div>
-        </div>
-      </div>
-
-      <div class="teaching-card reveal">
-        <div class="tc-title">Courses — University of Maryland</div>
-        <div class="course-row">
-          <div><div class="course-code">COMM 498D</div><div class="course-name">Nonprofit PR, Activism &amp; Issues Management (Online)</div></div>
-          <div class="course-dates">Summer 2017</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">COMM 353</div><div class="course-name">New Media Writing</div></div>
-          <div class="course-dates">2016–2018</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">COMM 107</div><div class="course-name">Oral Communication Principles and Practice</div></div>
-          <div class="course-dates">2013–2018</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">COMM 298P</div><div class="course-name">Introduction to Public Relations (TA)</div></div>
-          <div class="course-dates">Fall 2015</div>
-        </div>
-      </div>
-
-      <div class="teaching-card reveal">
-        <div class="tc-title">Students Mentorship</div>
-        <div class="course-row">
-          <div><div class="course-code">Ph.D. Level</div><div class="course-name">Advisor<br>Yidan Zhang</div></div>
-          <div class="course-dates">2025-present</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">Ph.D. Level</div><div class="course-name">Dissertation Committee Member<br>Curry Wilson, Shelby Luttman</div></div>
-          <div class="course-dates">2024–2025</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">M.S. Level</div><div class="course-name">Graduate Advisor<br>9 master's students, 2024–2025</div></div>
-          <div class="course-dates">Active</div>
-        </div>
-        <div class="course-row">
-          <div><div class="course-code">Thesis Cmte.</div><div class="course-name">20+ thesis project committees<br>across UTK graduate programs</div></div>
-          <div class="course-dates">2019–2024</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- SERVICE -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section class="service-section" id="service">
-  <div class="section-inner">
-    <div class="sh reveal">
-      <div class="sh-label">Community &amp; Profession</div>
-      <h2 class="sh-title">Service</h2>
-      <div class="sh-line"></div>
-    </div>
-    <div class="service-grid">
-
-      <div class="service-card reveal">
-        <div class="sc-title">Editorial Boards</div>
-        <div class="sc-item"><span class="sc-highlight">Public Relations Review</span> — Board Member (2023–present)</div>
-        <div class="sc-item"><span class="sc-highlight">Journal of Public Relations Research</span> — Board Member (2021–present)</div>
-        <div class="sc-item"><span class="sc-highlight">Journal of World Business</span> — Board Member (2018–present)</div>
-        <div class="sc-item"><span class="sc-highlight">Guest Editor</span> — Purpose-Driven PR Special Issue, <em>Public Relations Review</em> (2025)</div>
-        <div class="sc-item">J. of International Crisis &amp; Risk Communication Research (2018–2020)</div>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="sc-title">Journal Reviewing</div>
-        <div class="sc-item">Public Relations Review · J. of Public Relations Research</div>
-        <div class="sc-item">J. of Communication Management · Management Communication Quarterly</div>
-        <div class="sc-item">Human Communication Research · Communication Research</div>
-        <div class="sc-item">New Media &amp; Society · Social Media and Society</div>
-        <div class="sc-item">Environmental Communication · Mass Communication &amp; Society</div>
-        <div class="sc-item">J. of Business Research · J. of Advertising Research</div>
-        <div class="sc-item">Corporate Communications: An International Journal</div>
-        <div class="sc-item">International Journal of Strategic Communication</div>
-        <div class="sc-item"><span class="sc-highlight">Grant Proposal Reviewer</span> — Arthur W. Page Center (2020–2021)</div>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="sc-title">Conference Leadership</div>
-        <div class="sc-item"><span class="sc-highlight">Chair</span> — Issues Management, Lobbying &amp; Public Affairs, ICA 2025</div>
-        <div class="sc-item"><span class="sc-highlight">Chair</span> — AI &amp; Social Media: Questions for PR, ICA 2024</div>
-        <div class="sc-item"><span class="sc-highlight">Chair</span> — Engagement, Authentic Communication &amp; Network Perspectives, NCA 2022</div>
-        <div class="sc-item">Reviewer: ICA (2015–2024), NCA (2014–2024), AEJMC (2019–2024)</div>
-        <div class="sc-item">Selection Committee Member, NCA PR Division (2021–2022)</div>
-        <div class="sc-item">Pride Committee Member, NCA PR Division (2019–2020)</div>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="sc-title">University &amp; School</div>
-        <div class="sc-item"><span class="sc-highlight">Graduate Council</span> — UTK (2024–2025)</div>
-        <div class="sc-item">Graduate Council Appeals Committee (2024–2025)</div>
-        <div class="sc-item">Graduate Studies Committee, CCI (2024–2025)</div>
-        <div class="sc-item">Undergraduate Research Advisory Council (2023–2025)</div>
-        <div class="sc-item">CCI Technology Committee (2019–2024)</div>
-        <div class="sc-item"><span class="sc-highlight">Chair</span> — Faculty Search Committee, AP of Practice in PR (2024)</div>
-        <div class="sc-item">ADPR Scholarship Committee (2022–2024)</div>
-        <div class="sc-item">Junior Faculty Fellows Advisory Council (2020–2021)</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- CONTACT -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<section class="contact-section" id="contact">
-  <div class="section-inner">
-    <div class="sh">
-      <div class="sh-label">Get In Touch</div>
-      <h2 class="sh-title" style="color:var(--white);font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.4rem);">Contact</h2>
-      <div class="sh-line" style="margin:0.9rem auto 0;"></div>
-    </div>
-    <div class="contact-grid">
-      <div class="contact-item">
-        <div class="ci-label">Email</div>
-        <div class="ci-value"><a href="mailto:sifanxu@utk.edu">sifanxu@utk.edu</a></div>
-      </div>
-      <div class="contact-item">
-        <div class="ci-label">Phone</div>
-        <div class="ci-value">865-974-5135</div>
-      </div>
-      <div class="contact-item">
-        <div class="ci-label">Mailing Address</div>
-        <div class="ci-value">1345 Circle Park Drive<br>Knoxville, TN 37996</div>
-      </div>
-      <div class="contact-item">
-        <div class="ci-label">Department</div>
-        <div class="ci-value">School of Advertising &amp; Public Relations<br>College of Communication &amp; Information<br>University of Tennessee, Knoxville</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- FOOTER -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<footer>
-  &copy; 2026 Sifan Xu, Ph.D. &nbsp;·&nbsp; Associate Professor, University of Tennessee, Knoxville
-</footer>
-
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!-- SCRIPTS -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
 <script>
-  /* Tab switching */
-  function switchTab(e, paneId) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    document.getElementById(paneId).classList.add('active');
+/* ══ Course catalogue (from the Aug 2025 revision of the form) ══ */
+const CATALOG = {
+  b1: { need: 4, label: 'Block 1 · ADPR core', courses: [
+    {id:'ADVT510', code:'ADVT 510', name:'Advertising and Society',            term:'fall',   fn:'1', lockedBy:'pre-ADVT480', equiv:'ADVT 480'},
+    {id:'ADVT520', code:'ADVT 520', name:'Advertising and Communication Theory', term:'fall'},
+    {id:'ADVT540', code:'ADVT 540', name:'Advertising Decision Making',        term:'spring'},
+    {id:'ADVT560', code:'ADVT 560', name:'Account Planning',                   term:'spring', fn:'2', lockedBy:'pre-ADVT460', equiv:'ADVT 460'},
+    {id:'PBRL530', code:'PBRL 530', name:'Issues and Crisis Management',       term:'spring'},
+    {id:'PBRL540', code:'PBRL 540', name:'Public Relations Management',        term:'fall'},
+    {id:'PBRL550', code:'PBRL 550', name:'Public Relations Strategies',        term:'spring'},
+  ]},
+  b2: { need: 1, label: 'Block 2 · Strategic comm', courses: [
+    {id:'ADPR515', code:'ADPR 515', name:'Social Media Analytics',                   term:'fall', fn:'*', lockedBy:'pre-ADPR415', equiv:'ADPR 415'},
+    {id:'ADPR530', code:'ADPR 530', name:'Advertising and Public Relations Research', term:'spring'},
+    {id:'ADPR562', code:'ADPR 562', name:'Social Media Strategy and Tactics'},
+  ]},
+  b3: { need: 1, label: 'Block 3 · Concept application', courses: [
+    {id:'ADVT470',  code:'ADVT 470',  name:'Advertising Campaigns',      note:'For Public Relations undergraduate majors', fn:'3', forMajor:'pbrl'},
+    {id:'PBRL470S', code:'PBRL 470S', name:'Public Relations Campaigns', note:'For Advertising undergraduate majors',      fn:'3', forMajor:'advt'},
+    {id:'ADPR590',  code:'ADPR 590',  name:'Advertising and Public Relations Project', term:'fall'},
+  ]},
+};
+const B4_NEED = 4, CREDITS = 3, MIN_COURSES = 10, MIN_HOURS = 30, SDC_CAP = 6;
+const APPROVED_PREFIXES = ['ADPR','ADVT','PBRL','CMST','JREM','INSC'];
+const BANNED = ['ADPR541','ADPR542'];
+const STORE_KEY = 'adpr-4plus1-plan-v1';
+
+/* ══ State ══ */
+let state = {
+  fields: {},                 // text/select/checkbox inputs keyed by id
+  picks:  {},                 // courseId -> {seq, grade, sem}
+  elecs:  [],                 // {uid, code, name, credits, sem, grade, sdc}
+  seq:    0,                  // monotonic tick counter (selection order)
+};
+let uidCounter = 0;
+
+/* ══ Rendering: block course lists ══ */
+function renderBlocks(){
+  for (const bk of ['b1','b2','b3']){
+    const host = document.getElementById('list-'+bk);
+    host.innerHTML = '';
+    CATALOG[bk].courses.forEach(c => host.appendChild(courseRow(bk, c)));
+  }
+}
+
+function courseRow(bk, c){
+  const el = document.createElement('div');
+  el.className = 'course';
+  el.dataset.cid = c.id;
+
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.id = 'cb-'+c.id;
+  cb.checked = !!state.picks[c.id];
+  cb.addEventListener('change', () => togglePick(c.id, cb.checked));
+
+  const main = document.createElement('div');
+  main.className = 'c-main';
+  main.innerHTML =
+    `<label class="c-title" for="cb-${c.id}">
+       <span class="c-code">${c.code}</span> — ${c.name}${c.fn ? `<sup>${c.fn}</sup>` : ''}
+     </label>` +
+    `<div class="c-meta">(3) credit hours${c.term ? ' · offered ' + c.term : ''}${c.note ? ' · ' + c.note : ''}</div>` +
+    `<div class="c-flags" id="flags-${c.id}"></div>`;
+
+  const right = document.createElement('div');
+  right.className = 'c-right';
+  const grade = mkInput('grade', 'Grade', (state.picks[c.id]||{}).grade || '',
+                        v => { if (state.picks[c.id]) state.picks[c.id].grade = v; save(); });
+  const sem   = mkInput('sem',   'Sem/Year', (state.picks[c.id]||{}).sem || '',
+                        v => { if (state.picks[c.id]) state.picks[c.id].sem = v; save(); });
+  right.append(grade, sem);
+
+  el.append(cb, main, right);
+  return el;
+}
+
+function mkInput(cls, ph, val, onInput){
+  const i = document.createElement('input');
+  i.type = 'text'; i.className = cls; i.placeholder = ph; i.value = val;
+  i.addEventListener('input', () => onInput(i.value));
+  return i;
+}
+
+/* ══ Selection order drives the overflow ══ */
+function togglePick(cid, on){
+  if (on) state.picks[cid] = { seq: ++state.seq, grade:'', sem:'' };
+  else    delete state.picks[cid];
+  refresh();
+}
+
+/** Promote a course to the front of its block's order so it counts as required. */
+function promote(bk, cid){
+  const seqs = CATALOG[bk].courses.filter(c => state.picks[c.id]).map(c => state.picks[c.id].seq);
+  state.picks[cid].seq = Math.min(...seqs) - 1;
+  refresh();
+}
+
+/** Split a block's picks into the ones that satisfy it and the ones that overflow. */
+function allocate(bk){
+  const need = CATALOG[bk].need;
+  const picked = CATALOG[bk].courses
+    .filter(c => state.picks[c.id])
+    .sort((a,b) => state.picks[a.id].seq - state.picks[b.id].seq);
+  return { required: picked.slice(0, need), overflow: picked.slice(need) };
+}
+
+/* ══ Elective rows ══ */
+function addElective(seed){
+  state.elecs.push(Object.assign(
+    { uid:'e'+(++uidCounter), code:'', name:'', credits:CREDITS, sem:'', grade:'', sdc:false }, seed||{}));
+}
+
+/* Rebuild the elective rows only when the set of rows actually changes.
+   Re-rendering on every keystroke destroyed the <input> being typed into,
+   which stole the caret and limited the student to one character at a time. */
+function syncElectives(){
+  const host = document.getElementById('list-elec');
+  const rendered = Array.from(host.children).map(el => el.dataset.uid).join(',');
+  const wanted   = state.elecs.map(e => e.uid).join(',');
+  if (rendered === wanted) return;
+  host.innerHTML = '';
+  state.elecs.forEach(e => host.appendChild(electiveRow(e)));
+}
+
+function electiveRow(e){
+  const row = document.createElement('div');
+  row.className = 'elec-row';
+  row.dataset.uid = e.uid;
+
+  const grid = document.createElement('div');
+  grid.className = 'elec-grid';
+
+  const mk = (key, ph, cls, label) => {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<span class="mini-label">${label}</span>`;
+    const i = document.createElement('input');
+    i.type = 'text'; i.placeholder = ph; i.value = e[key] ?? ''; if (cls) i.className = cls;
+    i.addEventListener('input', () => {
+      if (key === 'credits'){
+        /* Strip anything that isn't a number and put the cleaned text back in the
+           field, keeping the caret where the student left it. The row is no longer
+           re-rendered on each keystroke, so nothing else corrects the display. */
+        const clean = i.value.replace(/[^\d.]/g, '');
+        if (clean !== i.value){
+          const pos = Math.max(0, i.selectionStart - (i.value.length - clean.length));
+          i.value = clean;
+          try { i.setSelectionRange(pos, pos); } catch (err) { /* not selectable */ }
+        }
+        e[key] = clean;
+      } else {
+        e[key] = i.value;
+      }
+      if (key === 'code' || key === 'credits') refresh(); else save();
+    });
+    wrap.appendChild(i);
+    return wrap;
+  };
+
+  const del = document.createElement('button');
+  del.className = 'icon-btn no-print'; del.type = 'button';
+  del.title = 'Remove elective'; del.setAttribute('aria-label','Remove elective'); del.textContent = '×';
+  del.addEventListener('click', () => {
+    const i = state.elecs.findIndex(x => x.uid === e.uid);   // by identity, not a captured index
+    if (i >= 0) state.elecs.splice(i, 1);
+    refresh();
+  });
+  const delWrap = document.createElement('div');
+  delWrap.innerHTML = '<span class="mini-label">&nbsp;</span>';
+  delWrap.appendChild(del);
+
+  grid.append(
+    mk('code','CMST 540','code','Course #'),
+    mk('name','Course title',null,'Title'),
+    mk('credits','3',null,'Hrs'),
+    mk('sem','Fall 2026',null,'Sem/Year'),
+    mk('grade','A',null,'Grade'),
+    delWrap
+  );
+
+  const sdc = document.createElement('label');
+  sdc.className = 'sdc';
+  const sc = document.createElement('input');
+  sc.type = 'checkbox'; sc.checked = !!e.sdc;
+  sc.addEventListener('change', () => { e.sdc = sc.checked; refresh(); });
+  sdc.append(sc, document.createTextNode(' This is an SDC concentration course (advisor approval, 6 credit cap)'));
+
+  const flags = document.createElement('div');
+  flags.className = 'c-flags'; flags.id = 'eflags-'+e.uid;
+
+  row.append(grid, sdc, flags);
+  return row;
+}
+
+/* ══ Elective validation ══ */
+function parseCode(raw){
+  const m = String(raw||'').trim().toUpperCase().match(/^([A-Z]{2,6})\s*[-\s]?\s*(\d{3})([A-Z]?)$/);
+  if (!m) return null;
+  return { prefix:m[1], number:parseInt(m[2],10), suffix:m[3], key:m[1]+m[2]+m[3] };
+}
+
+/** Returns {level:'ok'|'warn'|'err', text} badges for one elective. */
+function checkElective(code, credits){
+  const out = [];
+  const p = parseCode(code);
+  if (!String(code||'').trim()){
+    out.push({level:'idle', text:'Empty — enter a course number'});
+    return out;
+  }
+  if (!p){
+    out.push({level:'err', text:'Unrecognized course number (use e.g. "CMST 540")'});
+    return out;
+  }
+  if (BANNED.includes(p.prefix + p.number)){
+    out.push({level:'err', text:`${p.prefix} ${p.number} cannot be used as an elective`});
+    return out;
+  }
+  if (p.number >= 500){
+    out.push({level:'ok', text:'500 level — counts as an elective'});
+  } else {
+    out.push({level:'warn', text:`${p.number} level (below 500) — advisor must review`});
+  }
+  if (!APPROVED_PREFIXES.includes(p.prefix)){
+    out.push({level:'warn', text:`${p.prefix} is outside the College — advisor permission required`});
+  }
+  if (!(Number(credits) > 0)) out.push({level:'err', text:'Enter credit hours'});
+  return out;
+}
+
+/* ══ Badge helper ══ */
+function badge(host, level, text){
+  const s = document.createElement('span');
+  s.className = 'pill ' + level;
+  s.textContent = text;
+  host.appendChild(s);
+}
+
+/* ══ The main recompute ══ */
+function refresh(){
+  const dropped = enforceEligibility();
+  syncElectives();
+
+  const issues = [];
+  const alloc = {};
+  let courseCount = 0, hours = 0;
+
+  /* — Blocks 1–3 — */
+  for (const bk of ['b1','b2','b3']){
+    const a = alloc[bk] = allocate(bk);
+    const need = CATALOG[bk].need;
+
+    CATALOG[bk].courses.forEach(c => {
+      const el = document.querySelector(`.course[data-cid="${c.id}"]`);
+      const flags = document.getElementById('flags-'+c.id);
+      if (!el || !flags) return;
+      flags.innerHTML = '';
+      el.classList.toggle('on', a.required.some(x => x.id === c.id));
+      el.classList.toggle('overflow', a.overflow.some(x => x.id === c.id));
+
+      const why = ineligible(c);
+      if (why){
+        badge(flags, 'idle', why.short + ' · does not count');
+        return;                      // ineligible: no other badge can apply
+      }
+      if (a.required.some(x => x.id === c.id)){
+        badge(flags, 'ok', `Counts toward ${CATALOG[bk].label.split(' · ')[0]}`);
+      }
+      if (a.overflow.some(x => x.id === c.id)){
+        badge(flags, 'elec', '→ Moved to Block 4 as an elective');
+        const b = document.createElement('button');
+        b.className = 'btn tiny ghost no-print'; b.type = 'button';
+        b.textContent = 'Count in ' + CATALOG[bk].label.split(' · ')[0];
+        b.addEventListener('click', () => promote(bk, c.id));
+        flags.appendChild(b);
+      }
+    });
+
+    /* Block-level issues */
+    const n = a.required.length;
+    setPill('p-'+bk, n === need ? 'ok' : (n ? 'warn' : 'idle'), `${n} of ${need}`);
+    if (n < need){
+      issues.push({k:'e', t:`${CATALOG[bk].label}: ${need - n} more course${need-n>1?'s':''} needed.`});
+    }
+    if (a.overflow.length){
+      issues.push({k:'i', t:`${a.overflow.length} extra course${a.overflow.length>1?'s':''} from ` +
+        `${CATALOG[bk].label.split(' · ')[0]} moved into Block 4: ${a.overflow.map(c=>c.code).join(', ')}.`});
+    }
+
+    courseCount += a.required.length;
+    hours += a.required.length * CREDITS;
   }
 
-  /* Scroll-reveal */
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('vis');
-    });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  /* — Unavailable courses — */
+  /* A ticked course that just became ineligible was removed above; say so plainly. */
+  dropped.forEach(d => issues.push({k:'w', t:`${d.why.long} It was removed from your plan.`}));
 
-  /* Conference pagination */
-  (function() {
-    const PER_PAGE = 15;
-    const items = Array.from(document.querySelectorAll('.conf-item'));
-    const total = items.length;
-    const pageCount = Math.ceil(total / PER_PAGE);
-    let cur = 0;
+  const greyed = ALL_COURSES().map(c => ({c, why:ineligible(c)})).filter(x => x.why);
+  if (greyed.length){
+    issues.push({k:'i', t:`Unavailable to you: ${greyed.map(x => x.c.code).join(', ')}. ` +
+      `These are greyed out and count toward nothing.`});
+  }
+  if (!MAJOR_LABEL[state.fields['f-major']]){
+    issues.push({k:'i', t:`Select your undergraduate major so Block 3 can grey out the campaigns course that does not apply to you.`});
+  }
 
-    function showPage(p) {
-      cur = p;
-      items.forEach((el, i) => {
-        el.classList.toggle('visible', i >= cur * PER_PAGE && i < (cur + 1) * PER_PAGE);
-      });
-      renderPagination();
+  /* — Block 4: auto-migrated overflow — */
+  const autoHost = document.getElementById('list-auto');
+  autoHost.innerHTML = '';
+  const overflowAll = ['b1','b2','b3'].flatMap(bk =>
+    alloc[bk].overflow.map(c => ({ ...c, from: CATALOG[bk].label.split(' · ')[0] })));
+
+  let b4Count = 0;
+
+  overflowAll.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'elec-row auto';
+    const p = parseCode(c.code);
+    row.innerHTML =
+      `<div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:space-between;align-items:baseline">
+         <div class="c-title"><span class="c-code">${c.code}</span> — ${c.name}</div>
+         <span class="pill elec">carried from ${c.from}</span>
+       </div>
+       <div class="c-meta">(3) credit hours${state.picks[c.id].sem ? ' · ' + state.picks[c.id].sem : ''}${state.picks[c.id].grade ? ' · grade ' + state.picks[c.id].grade : ''}</div>
+       <div class="c-flags"></div>`;
+    const flags = row.querySelector('.c-flags');
+
+    if (p && p.number < 500){
+      badge(flags, 'warn', `${p.number} level (below 500) — advisor must review`);
+      issues.push({k:'w', t:`${c.code} carried into Block 4 is below the 500 level — flag it for advisor review.`});
+    } else {
+      badge(flags, 'ok', '500 level — counts as an elective');
     }
+    autoHost.appendChild(row);
 
-    function renderPagination() {
-      const pg = document.getElementById('conf-pagination');
-      pg.innerHTML = '';
-
-      const prev = document.createElement('button');
-      prev.className = 'conf-pg-btn';
-      prev.textContent = '← Prev';
-      prev.disabled = cur === 0;
-      prev.onclick = () => showPage(cur - 1);
-      pg.appendChild(prev);
-
-      for (let i = 0; i < pageCount; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'conf-pg-btn' + (i === cur ? ' active' : '');
-        btn.textContent = i + 1;
-        btn.onclick = (function(p){ return function(){ showPage(p); }; })(i);
-        pg.appendChild(btn);
-      }
-
-      const info = document.createElement('span');
-      info.className = 'conf-pg-info';
-      const start = cur * PER_PAGE + 1;
-      const end = Math.min((cur + 1) * PER_PAGE, total);
-      info.textContent = start + '–' + end + ' of ' + total;
-      pg.appendChild(info);
-
-      const next = document.createElement('button');
-      next.className = 'conf-pg-btn';
-      next.textContent = 'Next →';
-      next.disabled = cur === pageCount - 1;
-      next.onclick = () => showPage(cur + 1);
-      pg.appendChild(next);
-    }
-
-    showPage(0);
-  })();
-
-  /* Navbar shadow on scroll */
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar').style.boxShadow =
-      window.scrollY > 40 ? '0 2px 30px rgba(0,0,0,0.45)' : 'none';
+    b4Count += 1;
+    courseCount += 1;
+    hours += CREDITS;
   });
+
+  /* — Block 4: manually entered electives — */
+  /* Every course already accounted for elsewhere, so a typed elective can't double-count. */
+  const claimed = new Set();
+  ['b1','b2','b3'].forEach(bk => {
+    alloc[bk].required.concat(alloc[bk].overflow).forEach(c => {
+      const p = parseCode(c.code);
+      if (p) claimed.add(p.key);
+    });
+  });
+
+  /* Greyed-out courses count toward nothing, so typing one by hand into Block 4
+     is rejected for the same reason the checkbox is disabled. */
+  const barred = new Map();
+  ALL_COURSES().forEach(c => {
+    const why = ineligible(c);
+    const p = parseCode(c.code);
+    if (why && p) barred.set(p.key, why);
+  });
+
+  let sdcCredits = 0;
+  state.elecs.forEach(e => {
+    const flags = document.getElementById('eflags-'+e.uid);
+    const badges = checkElective(e.code, e.credits);
+    const p = parseCode(e.code);
+    if (p && barred.has(p.key)){
+      badges.push({level:'err', text:`${barred.get(p.key).short} — cannot be used as an elective`});
+    } else if (p && claimed.has(p.key)){
+      badges.push({level:'err', text:`${p.prefix} ${p.number}${p.suffix} is already counted elsewhere in this plan`});
+    }
+    flags.innerHTML = '';
+    badges.forEach(b => badge(flags, b.level === 'idle' ? 'idle' : b.level, b.text));
+
+    const hasErr  = badges.some(b => b.level === 'err');
+    const isEmpty = !String(e.code||'').trim() && !String(e.name||'').trim();
+    if (isEmpty) return;
+    if (p && !hasErr) claimed.add(p.key);
+
+    if (e.sdc){
+      badge(flags, 'warn', 'SDC concentration — advisor approval required');
+      sdcCredits += Number(e.credits) || 0;
+    }
+    if (hasErr){
+      badges.filter(b => b.level === 'err').forEach(b =>
+        issues.push({k:'e', t:`Block 4 · ${e.code || 'untitled row'}: ${b.text}.`}));
+      return; // an errored row does not count toward the requirement
+    }
+    badges.filter(b => b.level === 'warn').forEach(b =>
+      issues.push({k:'w', t:`Block 4 · ${e.code}: ${b.text}.`}));
+
+    b4Count += 1;
+    courseCount += 1;
+    hours += Number(e.credits) || 0;
+  });
+
+  if (sdcCredits > SDC_CAP){
+    issues.push({k:'e', t:`SDC concentration electives total ${sdcCredits} credits — the maximum is ${SDC_CAP}.`});
+  }
+
+  setPill('p-b4', b4Count >= B4_NEED ? 'ok' : (b4Count ? 'warn' : 'idle'), `${b4Count} of ${B4_NEED}`);
+  if (b4Count < B4_NEED){
+    issues.push({k:'e', t:`Block 4: ${B4_NEED - b4Count} more elective${B4_NEED-b4Count>1?'s':''} needed.`});
+  }
+
+  /* — Final check: at least 10 courses / 30 hours — */
+  if (courseCount < MIN_COURSES){
+    issues.push({k:'e', t:`Final check: ${courseCount} course${courseCount===1?'':'s'} entered — the plan needs at least ${MIN_COURSES}.`});
+  }
+  if (hours < MIN_HOURS){
+    issues.push({k:'e', t:`Final check: ${hours} credit hours — total course hours must be no less than ${MIN_HOURS}.`});
+  }
+
+  renderAudit(alloc, b4Count, courseCount, hours, issues);
+  save();
+}
+
+function setPill(id, level, text){
+  const el = document.getElementById(id);
+  el.className = 'pill ' + level;
+  el.textContent = text;
+}
+
+/* ══ Audit sidebar ══ */
+function renderAudit(alloc, b4Count, courseCount, hours, issues){
+  const host = document.getElementById('audit-blocks');
+  host.innerHTML = '';
+
+  const rows = [
+    ...['b1','b2','b3'].map(bk => ({
+      label: CATALOG[bk].label.split(' · ')[0],
+      sub:   CATALOG[bk].label.split(' · ')[1],
+      have:  alloc[bk].required.length,
+      need:  CATALOG[bk].need,
+      extra: alloc[bk].overflow.length,
+    })),
+    { label:'Block 4', sub:'General electives', have:b4Count, need:B4_NEED, extra:0 },
+  ];
+
+  rows.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'audit-row';
+    div.innerHTML =
+      `<div style="flex:1;min-width:0">
+         <span class="lbl">${r.label}</span>
+         <span class="cnt">${r.sub} · ${r.have * CREDITS} of ${r.need * CREDITS} hrs${r.extra ? ` · ${r.extra} extra → Block 4` : ''}</span>
+         <span class="bar"><i class="${r.have >= r.need ? 'done' : ''}" style="width:${Math.min(100, (r.have/r.need)*100)}%"></i></span>
+       </div>
+       <span class="pill ${r.have >= r.need ? 'ok' : (r.have ? 'warn' : 'idle')}">${r.have}/${r.need}</span>`;
+    host.appendChild(div);
+  });
+
+  document.getElementById('t-courses').textContent = courseCount;
+  document.getElementById('t-hours').textContent  = hours;
+  document.getElementById('t-courses').className = courseCount >= MIN_COURSES ? 'met' : 'short';
+  document.getElementById('t-hours').className   = hours >= MIN_HOURS ? 'met' : 'short';
+
+  const errs  = issues.filter(i => i.k === 'e');
+  const warns = issues.filter(i => i.k === 'w');
+  const v = document.getElementById('verdict');
+  if (errs.length){
+    v.className = 'verdict err';
+    v.textContent = `Plan incomplete — ${errs.length} requirement${errs.length>1?'s':''} not yet met.`;
+  } else if (warns.length){
+    v.className = 'verdict warn';
+    v.textContent = `All blocks satisfied (${courseCount} courses · ${hours} hours). ` +
+                    `${warns.length} item${warns.length>1?'s':''} need your advisor's review before sign-off.`;
+  } else {
+    v.className = 'verdict ok';
+    v.textContent = `Plan complete — ${courseCount} courses · ${hours} credit hours. ` +
+                    `All block requirements and the 30-hour minimum are met.`;
+  }
+
+  const ul = document.getElementById('issues');
+  ul.innerHTML = '';
+  const order = { e:0, w:1, i:2, g:3 };
+  issues.slice().sort((a,b) => order[a.k] - order[b.k]).forEach(i => {
+    const li = document.createElement('li');
+    li.className = i.k;
+    li.textContent = i.t;
+    ul.appendChild(li);
+  });
+
+  const d = new Date();
+  document.getElementById('audit-stamp').textContent =
+    d.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+}
+
+/* ══ Eligibility ══
+   ONE rule governs every greyed-out course: it cannot be selected, and it counts
+   toward nothing — not its own block, not Block 4, not the credit totals.
+   A course is ineligible for exactly two reasons:
+     · prereq — the student already took the undergraduate equivalent
+     · major  — it belongs to the other undergraduate track (footnote 3's
+                cross-over: advertising undergrads take the PR campaigns course
+                and PR undergrads take the advertising one)
+   Courses with neither `lockedBy` nor `forMajor` (e.g. ADPR 590) are always open. */
+const MAJOR_LABEL = { advt:'Advertising', pbrl:'Public Relations' };
+
+function majorLock(c){
+  const major = state.fields['f-major'];
+  if (!c.forMajor || !MAJOR_LABEL[major] || c.forMajor === major) return null;
+  const takeInstead = ['b1','b2','b3']
+    .flatMap(bk => CATALOG[bk].courses)
+    .find(x => x.forMajor === major);
+  return { label: MAJOR_LABEL[major], instead: takeInstead ? takeInstead.code : null };
+}
+
+/** @returns {{kind:string, short:string, long:string}|null} */
+function ineligible(c){
+  if (c.lockedBy && state.fields[c.lockedBy]){
+    return {
+      kind:  'prereq',
+      short: `Already completed ${c.equiv}`,
+      long:  `${c.code} is unavailable because ${c.equiv} was already completed as an undergraduate.`,
+    };
+  }
+  const ml = majorLock(c);
+  if (ml){
+    return {
+      kind:  'major',
+      short: `Not for ${ml.label} undergraduate majors` + (ml.instead ? ` — take ${ml.instead}` : ''),
+      long:  `${c.code} is unavailable to ${ml.label} undergraduate majors` +
+             (ml.instead ? ` — they take ${ml.instead} instead.` : '.'),
+    };
+  }
+  return null;
+}
+
+const ALL_COURSES = () => ['b1','b2','b3'].flatMap(bk => CATALOG[bk].courses);
+
+/** Grey out and disable ineligible courses; drop any that were already ticked. */
+function enforceEligibility(){
+  const dropped = [];
+  ALL_COURSES().forEach(c => {
+    const why = ineligible(c);
+    if (why && state.picks[c.id]){
+      delete state.picks[c.id];               // counts toward nothing, so stop tracking it
+      dropped.push({ course:c, why });
+    }
+    const el = document.querySelector(`.course[data-cid="${c.id}"]`);
+    const cb = document.getElementById('cb-'+c.id);
+    if (el){
+      el.classList.toggle('blocked', !!why);
+      el.querySelectorAll('.c-right input').forEach(i => { i.disabled = !!why; });
+    }
+    if (cb){
+      cb.disabled = !!why;
+      cb.checked  = !!state.picks[c.id];
+      cb.title    = why ? why.short : '';
+    }
+  });
+  return dropped;
+}
+
+/* ══ Persistence ══ */
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      const s = document.getElementById('saved');
+      s.textContent = 'Saved to this browser · ' + new Date().toLocaleTimeString();
+    } catch (err) { /* private mode — planner still works, just not persisted */ }
+  }, 250);
+}
+
+function load(){
+  let raw = null;
+  try { raw = localStorage.getItem(STORE_KEY); } catch (err) { /* ignore */ }
+  if (raw){
+    try { hydrate(JSON.parse(raw)); return; } catch (err) { /* fall through */ }
+  }
+  for (let i = 0; i < B4_NEED; i++) addElective();
+}
+
+function hydrate(data){
+  state = Object.assign({fields:{}, picks:{}, elecs:[], seq:0}, data);
+  state.elecs = (state.elecs || []).map(e => Object.assign(
+    {uid:'e'+(++uidCounter), code:'', name:'', credits:CREDITS, sem:'', grade:'', sdc:false}, e, {uid:'e'+uidCounter}));
+  if (!state.elecs.length) for (let i = 0; i < B4_NEED; i++) addElective();
+  document.querySelectorAll('[data-save]').forEach(el => {
+    const v = state.fields[el.id];
+    if (v === undefined) return;
+    if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+  });
+}
+
+/* ══ Wiring ══ */
+document.querySelectorAll('[data-save]').forEach(el => {
+  el.addEventListener(el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input', () => {
+    state.fields[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+    refresh();
+  });
+});
+
+document.getElementById('add-elec').addEventListener('click', () => { addElective(); refresh(); });
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (!confirm('Clear every selection and start over? This cannot be undone.')) return;
+  try { localStorage.removeItem(STORE_KEY); } catch (err) { /* ignore */ }
+  state = {fields:{}, picks:{}, elecs:[], seq:0};
+  for (let i = 0; i < B4_NEED; i++) addElective();
+  document.querySelectorAll('[data-save]').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false; else el.value = '';
+  });
+  renderBlocks(); refresh();
+});
+
+document.getElementById('btn-export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.fields['f-name'] || 'adpr-4plus1') .replace(/[^\w-]+/g,'_') + '-program-plan.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-in').click());
+document.getElementById('file-in').addEventListener('change', ev => {
+  const f = ev.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try { hydrate(JSON.parse(r.result)); renderBlocks(); refresh(); }
+    catch (err) { alert('That file could not be read as a saved program plan.'); }
+  };
+  r.readAsText(f);
+  ev.target.value = '';
+});
+
+/* ══ Boot ══ */
+load();
+renderBlocks();
+refresh();
 </script>
 </body>
 </html>
