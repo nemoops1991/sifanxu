@@ -1,1 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Persuasion Theories Handout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..800;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap">
+
+<style>
+  :root {
+    --ground:      #FBFBFA;
+    --ink:         #17171A;
+    --ink-strong:  #0A0A0B;
+    --nav-idle:    #B7B7B4;
+    --nav-active:  #141416;
+    --sub-idle:    #ADADAA;
+    --sub-active:  #2A2A2C;
+    --rule:        #E4E4E1;
+    --bar:         #D8D7D3;
+    --muted:       #8C8C88;
+    --num:         #CBCBC6;
+    --sans: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:     #0C0C0D;
+      --ink:        #E4E4E1;
+      --ink-strong: #FAFAF8;
+      --nav-idle:   #595957;
+      --nav-active: #F3F3F0;
+      --sub-idle:   #4E4E4C;
+      --sub-active: #D6D6D3;
+      --rule:       #242426;
+      --bar:        #2C2C2E;
+      --muted:      #7C7C79;
+      --num:        #3A3A3C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:     #0C0C0D;
+    --ink:        #E4E4E1;
+    --ink-strong: #FAFAF8;
+    --nav-idle:   #595957;
+    --nav-active: #F3F3F0;
+    --sub-idle:   #4E4E4C;
+    --sub-active: #D6D6D3;
+    --rule:       #242426;
+    --bar:        #2C2C2E;
+    --muted:      #7C7C79;
+    --num:        #3A3A3C;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--ink-strong); color: var(--ground); }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 22% 78%;
+    align-items: start;
+  }
+
+  /* ---------- LEFT: sticky nav ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid var(--bar);
+    padding: clamp(2rem, 4.5vh, 3.4rem) clamp(1.4rem, 2vw, 2.4rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .rail__eyebrow {
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  .rail__title {
+    font-family: var(--serif);
+    font-size: 1.02rem;
+    line-height: 1.28;
+    color: var(--ink-strong);
+    font-weight: 500;
+    margin: 0 0 auto;
+    max-width: 15ch;
+  }
+  nav {
+    margin-top: clamp(1.6rem, 4vh, 2.6rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-right: 4px;
+    /* keep scroll usable but visually clean */
+    mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  }
+  nav::-webkit-scrollbar { width: 0; }
+
+  .nav-item { display: block; }
+
+  .nav-theory {
+    display: grid;
+    grid-template-columns: 1.9rem 1fr;
+    align-items: baseline;
+    gap: 0.15rem;
+    text-decoration: none;
+    color: var(--nav-idle);
+    font-size: clamp(0.98rem, 1.05vw, 1.16rem);
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    padding: 0.42rem 0;
+    transition: color .45s ease;
+  }
+  .nav-theory .n {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--num);
+    transform: translateY(-0.15em);
+    font-variant-numeric: tabular-nums;
+    transition: color .45s ease;
+  }
+  .nav-theory:hover { color: var(--sub-active); }
+  .nav-item.active > .nav-theory { color: var(--nav-active); }
+  .nav-item.active > .nav-theory .n { color: var(--nav-active); }
+
+  .subnav {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.9rem;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows .5s cubic-bezier(.4,0,.2,1), opacity .4s ease;
+  }
+  .subnav > div { overflow: hidden; min-height: 0; }
+  .nav-item.active .subnav { grid-template-rows: 1fr; opacity: 1; }
+
+  .subnav a {
+    display: block;
+    text-decoration: none;
+    color: var(--sub-idle);
+    font-size: 0.78rem;
+    line-height: 1.32;
+    letter-spacing: 0.002em;
+    padding: 0.28rem 0;
+    transition: color .3s ease;
+  }
+  .subnav a:hover { color: var(--sub-active); }
+  .subnav a.current { color: var(--sub-active); font-weight: 500; }
+
+  /* ---------- RIGHT: content ---------- */
+  .reading {
+    padding: clamp(2.4rem, 6vh, 5rem) clamp(1.6rem, 5vw, 6rem) 22vh;
+    min-width: 0;
+  }
+  .content { max-width: 40rem; }
+
+  .masthead { margin-bottom: clamp(4rem, 12vh, 8rem); }
+  .masthead__label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin: 0 0 1.4rem;
+  }
+  .masthead h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: var(--ink-strong);
+    margin: 0;
+    text-wrap: balance;
+    max-width: 16ch;
+  }
+  .masthead__rule {
+    width: 3.2rem; height: 1px; background: var(--ink-strong);
+    margin-top: 2.2rem; opacity: .8;
+  }
+
+  .theory { padding-top: clamp(3rem, 10vh, 7rem); scroll-margin-top: 2rem; }
+  .theory:first-of-type { padding-top: 0; }
+
+  .theory__head { margin-bottom: 2.2rem; }
+  .theory__num {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em;
+    color: var(--num); font-variant-numeric: tabular-nums;
+    display: block; margin-bottom: 1rem;
+  }
+  .theory__title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.014em;
+    color: var(--ink-strong);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3.sub {
+    scroll-margin-top: 1.6rem;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.04rem;
+    letter-spacing: -0.006em;
+    line-height: 1.35;
+    color: var(--ink-strong);
+    margin: 2.9rem 0 0.9rem;
+  }
+
+  .content p {
+    font-size: 1rem;
+    line-height: 1.72;
+    margin: 0 0 1.25rem;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .content p:last-child { margin-bottom: 0; }
+  .content strong { font-weight: 600; color: var(--ink-strong); }
+
+  .lede { padding-left: 1.1rem; border-left: 2px solid var(--rule); }
+  .lede strong { display: inline; }
+
+  hr.div {
+    border: 0; height: 1px; background: var(--rule);
+    margin: clamp(3.5rem, 9vh, 6rem) 0 0;
+  }
+
+  /* theme toggle */
+  .toggle {
+    position: fixed; bottom: 1.4rem; right: 1.5rem; z-index: 20;
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    border: 1px solid var(--bar); background: var(--ground);
+    color: var(--muted); cursor: pointer;
+    display: grid; place-items: center;
+    transition: color .3s ease, border-color .3s ease;
+  }
+  .toggle:hover { color: var(--ink-strong); border-color: var(--ink-strong); }
+  .toggle svg { width: 15px; height: 15px; }
+
+  a:focus-visible, .toggle:focus-visible {
+    outline: 2px solid var(--ink-strong); outline-offset: 3px; border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  /* load-in */
+  .fade { opacity: 0; transform: translateY(10px); animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade { opacity: 1; transform: none; animation: none; } }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 820px) {
+    .shell { grid-template-columns: 1fr; }
+    .rail {
+      position: sticky; top: 0; height: auto;
+      border-right: 0; border-bottom: 1px solid var(--bar);
+      background: color-mix(in srgb, var(--ground) 86%, transparent);
+      backdrop-filter: blur(10px); z-index: 15;
+      padding: 1rem 1.3rem;
+    }
+    .rail__title, nav { display: none; }
+    .rail__eyebrow { margin: 0; }
+    .reading { padding: 2.4rem 1.4rem 20vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ============ LEFT RAIL ============ -->
+  <aside class="rail">
+    <p class="rail__eyebrow">Advanced PR Writing</p>
+    <p class="rail__title">Persuasion Theories &amp; Public Relations Writing</p>
+
+    <nav id="nav" aria-label="Theories">
+      <div class="nav-item" data-theory="t1">
+        <a class="nav-theory" href="#t1"><span class="n">01</span><span>Theory of Planned Behavior</span></a>
+        <ul class="subnav"><div>
+          <li><a href="#t1-s1">The Roots of TPB: From TRA to TPB</a></li>
+          <li><a href="#t1-s2">The Three Pillars of TPB</a></li>
+          <li><a href="#t1-s3">Breaking Down the Determinants</a></li>
+          <li><a href="#t1-s4">The Pervasiveness of TPB</a></li>
+        </div></ul>
+      </div>
+
+      <div class="nav-item" data-theory="t2">
+        <a class="nav-theory" href="#t2"><span class="n">02</span><span>Identity-Based Motivation Theory</span></a>
+        <ul class="subnav"><div>
+          <li><a href="#t2-s1">Dynamic Construction of Identities</a></li>
+          <li><a href="#t2-s2">Action-Readiness</a></li>
+          <li><a href="#t2-s3">Interpretation of Difficulty</a></li>
+          <li><a href="#t2-s4">Research and Findings</a></li>
+          <li><a href="#t2-s5">Implications and Future Directions</a></li>
+        </div></ul>
+      </div>
+
+      <div class="nav-item" data-theory="t3">
+        <a class="nav-theory" href="#t3"><span class="n">03</span><span>Narrative Transportation Theory</span></a>
+        <ul class="subnav"><div>
+          <li><a href="#t3-s1">Transportation</a></li>
+          <li><a href="#t3-s2">Self-referencing</a></li>
+        </div></ul>
+      </div>
+
+      <div class="nav-item" data-theory="t4">
+        <a class="nav-theory" href="#t4"><span class="n">04</span><span>Expectancy Violations Theory</span></a>
+        <ul class="subnav"><div>
+          <li><a href="#t4-s1">Positive and Negative Violations</a></li>
+          <li><a href="#t4-s2">Tolerance Levels</a></li>
+        </div></ul>
+      </div>
+
+      <div class="nav-item" data-theory="t5">
+        <a class="nav-theory" href="#t5"><span class="n">05</span><span>Inoculation Theory</span></a>
+        <ul class="subnav"><div>
+          <li><a href="#t5-s1">A Medical Analogy</a></li>
+          <li><a href="#t5-s2">Two-Sided Messages</a></li>
+          <li><a href="#t5-s3">Research Experiments</a></li>
+          <li><a href="#t5-s4">Demonstrating Resistance</a></li>
+          <li><a href="#t5-s5">Types of Pretreatments</a></li>
+          <li><a href="#t5-s6">Early Challenges and Developments</a></li>
+          <li><a href="#t5-s7">Applications of Inoculation Theory</a></li>
+          <li><a href="#t5-s8">Contemporary Issues and Developments</a></li>
+        </div></ul>
+      </div>
+
+      <div class="nav-item" data-theory="t6">
+        <a class="nav-theory" href="#t6"><span class="n">06</span><span>Elaboration Likelihood Model</span></a>
+        <ul class="subnav"><div>
+          <li><a href="#t6-s1">The Two Routes to Persuasion</a></li>
+          <li><a href="#t6-s2">The Elaboration Continuum</a></li>
+          <li><a href="#t6-s3">Organizing Processes Along the Continuum</a></li>
+        </div></ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ RIGHT: READING ============ -->
+  <main class="reading">
+    <div class="content">
+
+      <header class="masthead fade">
+        <p class="masthead__label">PBRL420 Writing for Action and Change</p>
+        <h1>Persuasion Theories and Public Relations Writing</h1>
+        <div class="masthead__rule"></div>
+      </header>
+
+      <!-- ===== 01 ===== -->
+      <section class="theory" id="t1">
+        <div class="theory__head">
+          <span class="theory__num">01 / SIX THEORIES</span>
+          <h2 class="theory__title">Theory of Planned Behavior</h2>
+        </div>
+        <p>The TPB posits that human behavior is shaped by three main factors: behavioral beliefs (beliefs about the consequences of an action), normative beliefs (beliefs about what others expect), and control beliefs (beliefs about factors that facilitate or hinder behavior). These factors collectively influence attitudes, subjective norms, and perceived behavioral control, which, in turn, shape behavioral intentions. When individuals have the intention to perform a behavior and perceive a sufficient degree of control over it, they are more likely to carry out that behavior. TPB considers intention as the immediate precursor to behavior, assuming that perceived behavioral control can serve as a proxy for actual control.</p>
+        <p>In the world of social psychology, theories provide valuable insights into how human behavior is influenced and shaped. One such theory, the Theory of Planned Behavior (TPB), is our focus in this chapter. The TPB, developed by Ajzen in the late 20th century, builds upon the Theory of Reasoned Action (TRA) and continues to captivate the attention of researchers in the field. To make this theory more accessible to you, let's break down its key concepts and ideas.</p>
+
+        <h3 class="sub" id="t1-s1">The Roots of TPB: From TRA to TPB</h3>
+        <p>Before diving into the TPB, it's important to understand its predecessor, the TRA. The TRA was designed to explain the connection between attitudes and behavior. It posits that our intentions to engage in a specific behavior are the primary drivers of our actions. These intentions reflect our motivation and conscious decision to put effort into performing a particular behavior.</p>
+        <p>In essence, the TRA focuses on volitional behaviors – those that are entirely under our control. However, it falls short when dealing with behaviors that require special skills, resources, or opportunities not readily available. These complex goals needed a new approach, leading to the birth of the TPB.</p>
+
+        <h3 class="sub" id="t1-s2">The Three Pillars of TPB</h3>
+        <p>The TPB expands upon the TRA by introducing a third determinant of behavioral intentions: Perceived Behavioral Control (PBC). PBC represents an individual's perception of how easy or difficult it is to perform a behavior. This concept bears resemblance to Bandura's idea of self-efficacy. It acknowledges that behaviors exist on a spectrum, ranging from easily executable actions to those requiring extensive resources and skills.</p>
+        <p>While the link between intentions and behavior is straightforward – we tend to do what we intend to do – the relationship between PBC and behavior is more complex. Essentially, we're more likely to engage in behaviors we feel in control of, and conversely, we're less likely to perform behaviors over which we have no control.</p>
+
+        <h3 class="sub" id="t1-s3">Breaking Down the Determinants</h3>
+        <p>Within TPB, behavioral intention is influenced by three primary determinants: attitudes, subjective norms, and PBC.</p>
+        <p class="lede"><strong>Attitudes:</strong> These represent an individual's overall evaluation of a specific behavior. They are assessed with a similar level of specificity as the behavior itself.</p>
+        <p class="lede"><strong>Subjective Norms:</strong> These reflect a person's beliefs about whether significant others in their life think they should engage in a particular behavior. These significant others are individuals whose preferences matter to them.</p>
+        <p class="lede"><strong>PBC:</strong> This encompasses an individual's perception of the ease or difficulty of performing a behavior. It is shaped by beliefs about having access to necessary resources and opportunities.</p>
+
+        <h3 class="sub" id="t1-s4">The Pervasiveness of TPB</h3>
+        <p>The TPB has garnered substantial attention in academic research. As of April 2020, it was the subject of over 4,200 papers referenced in the Web of Science bibliographic database. These papers spanned various domains, including health sciences, environmental science, business, management, and educational research. This widespread application of TPB aligns with George Miller's vision of democratizing psychology knowledge and making it accessible to a broader audience.</p>
+        <p>In conclusion, TPB remains a valuable framework in the social and behavioral sciences. There is enduring interest in TPB and its potential to explain and predict behavior across diverse domains. The theory's adaptability and its capacity to incorporate nuanced aspects of human behavior contribute to its continued relevance in contemporary research.</p>
+      </section>
+
+      <hr class="div">
+
+      <!-- ===== 02 ===== -->
+      <section class="theory" id="t2">
+        <div class="theory__head">
+          <span class="theory__num">02 / SIX THEORIES</span>
+          <h2 class="theory__title">Identity-Based Motivation Theory</h2>
+        </div>
+        <p>The concept of self and its influence on behavior has been a foundational aspect of psychological theorizing. People inherently believe that they know who they are and that their identity matters for their actions. This belief, while intuitive, lacks substantial empirical support. This article introduces Identity-Based Motivation (IBM) theory, which challenges the assumptions of stable identities and their direct influence on behavior. IBM theory posits that identities are dynamically constructed in context, influencing actions only when they are congruent with the situation. This theory presents three core predictions: dynamic construction, action-readiness, and interpretation of difficulty.</p>
+
+        <h3 class="sub" id="t2-s1">Dynamic Construction of Identities</h3>
+        <p>Traditionally, the idea of a stable self has been dominant in psychological theories. However, IBM theory proposes that identities are not fixed but are dynamically constructed based on contextual cues. Situated cognition theories emphasize the influence of the environment on thinking and decision-making. People consider accessible information from their environment to determine actions relevant to the moment. Identities that come to mind make a difference in judgment, choice, and behavior if they are congruent with the current situation. This means that identities are malleable and contextually dependent.</p>
+
+        <h3 class="sub" id="t2-s2">Action-Readiness</h3>
+        <p>IBM theory suggests that accessible identities cue readiness to act in identity-congruent ways. Individuals are more likely to engage in actions that align with their accessible identities when the actions seem relevant or necessary in the given context. For instance, if a person's identity is tied to academic success and they are presented with information about financial aid for college, they are more likely to plan for increased academic effort. However, if accessible identities do not seem relevant to the current context, they may not influence behavior.</p>
+
+        <h3 class="sub" id="t2-s3">Interpretation of Difficulty</h3>
+        <p>The theory asserts that interpretation of experienced difficulty plays a crucial role in determining whether identity-based motivation leads to action. When an action feels identity-congruent and is challenging, the experienced difficulty reinforces the importance of the behavior. On the other hand, when an action feels identity-incongruent and is difficult, the same difficulty reinforces the idea that the behavior “is not for me.” Thus, interpretation of difficulty shapes whether individuals perceive an action as meaningful and relevant to their identity.</p>
+
+        <h3 class="sub" id="t2-s4">Research and Findings</h3>
+        <p>Research on IBM theory has provided insights into the dynamic construction of identities, action-readiness, and interpretation of difficulty. Studies have shown that contextual cues influence which identities come to mind and that understanding of identities varies depending on the situation. For instance, middle school students showed increased academic engagement when their identity was tied to academic success and they perceived success in that domain as relevant. Moreover, experiments have revealed that individuals' interpretation of experienced difficulty affects whether identity-based actions are pursued.</p>
+
+        <h3 class="sub" id="t2-s5">Implications and Future Directions</h3>
+        <p>IBM theory challenges traditional notions of stable identities and their direct impact on behavior. It offers insights into improving academic outcomes, addressing health disparities, and guiding policy interventions. The theory's focus on contextual cues and interpretation of difficulty provides a framework to predict behavior change and design effective interventions. Future research should explore other aspects of identity, different outcome measures, and socio-cultural contexts to expand the generalizability of the theory's predictions.</p>
+        <p>Identity-Based Motivation theory offers a fresh perspective on the interaction between identities and behavior. Challenging the assumption of stable identities, the theory posits that identities are contextually constructed and dynamically influenced by the interpretation of experienced difficulty. Through research findings, this theory has practical implications for improving various aspects of individuals' lives and guiding interventions.</p>
+      </section>
+
+      <hr class="div">
+
+      <!-- ===== 03 ===== -->
+      <section class="theory" id="t3">
+        <div class="theory__head">
+          <span class="theory__num">03 / SIX THEORIES</span>
+          <h2 class="theory__title">Narrative Transportation Theory</h2>
+        </div>
+        <p>Narrative transportation theory emphasizes the power of storytelling to immerse readers emotionally and cognitively. Compelling narratives have the ability to captivate an audience and make them more receptive to the underlying message.</p>
+        <p>Narrative transportation is a psychological phenomenon that occurs when individuals become deeply immersed in a story, leading to reduced analytical thinking, heightened emotional responses, and increased persuasion. This process is contrasted with analytical processing, which involves logical consideration of arguments. The narrative structure of mental simulations, often in the form of stories, is highlighted, including elements like chronology and causality.</p>
+        <p>Narrative thought organizes events within stories along a temporal dimension, breaking them into episodes with beginnings, middles, and ends. Additionally, the narrative structure establishes relationships between story elements and enables causal inferencing. These elements are pivotal in structuring human goal-oriented action episodes, composed of goals, actions, and outcomes. The integration of these components forms the basis of narrative thought and simulation.</p>
+
+        <h3 class="sub" id="t3-s1">Transportation</h3>
+        <p>Green and Brock's work in 2000 identifies transportation as the immersive experience of becoming "lost" in a story, contrasting it with analytical processing. While analytical processing relies on logical argument evaluation for attitude change, transportation leads to persuasion through realism, emotional response, and reduced negative cognitive reactions. The article proposes that as mental simulations inherently possess a narrative structure, individuals engaged in simulation may experience transportation through their self-generated stories. Consequently, this could result in less critical analysis of advertisements, fewer negative thoughts, and stronger emotional responses, ultimately enhancing persuasion.</p>
+
+        <h3 class="sub" id="t3-s2">Self-referencing</h3>
+        <p>While mental simulation through narratives could involve episodes featuring other people, the primary focus is on self-focused mental simulation. Contextual detail within ads plays a pivotal role in facilitating persuasive effects. Self-focused mental simulation, according to Krishnamurthy and Sujan (1999), is more effective when ads incorporate contextual detail to aid forward-looking simulation. This contrasts with retrospective self-referencing, which is more persuasive when contextual detail is reduced due to the pre-existing detailed information in memories. Although self-referencing is essential for some mental simulation instances, the article suggests that narrative transportation can occur without explicit self-referencing. Escalas, Moore, and Edell's research on television ads' story development is compared to the concept of narrative transportation, as both involve viewers being drawn into a story.</p>
+        <p>Consumer decision-making processes are also discussed within the context of mental simulation. Consumption visions, self-constructed mental simulations of future consumption situations, are highlighted for their role in motivating consumer behavior. These visions involve the self-enactment of detailed product-related behaviors and are particularly relevant to advertising settings. The article emphasizes that while ad-evoked mental simulation may not be entirely self-constructed, the process heavily relies on self-generated thoughts, depending on the level of detail provided by the ad.</p>
+        <p>Keller and McGill's work (1994) reveals that more easily imagined attributes disproportionately influence consumer decision-making when participants engage in imagery. Instructions to imagine the actual experience with alternatives lead to affective responses influencing desirability assessment. Additionally, Keller and Block's research (1997) introduces the concept of vividness, revealing an inverted U relationship between elaboration and persuasion. However, narrative transportation findings differ, showing no such relationship. This suggests that high levels of vividness and self-referencing within a narrative context do not harm persuasion.</p>
+        <p>In summary, when narrative transportation occurs, individuals become immersed in stories, leading to reduced analytical thinking and increased persuasion. It explores the narrative structure of mental simulations, its implications for advertising, and its effects on consumer decision-making. The focus is on the cognitive and affective mechanisms underlying the impact of mental simulation on persuasion, all within the framework of transportation theory.</p>
+      </section>
+
+      <hr class="div">
+
+      <!-- ===== 04 ===== -->
+      <section class="theory" id="t4">
+        <div class="theory__head">
+          <span class="theory__num">04 / SIX THEORIES</span>
+          <h2 class="theory__title">Expectancy Violations Theory</h2>
+        </div>
+        <p>Various theories from different fields like communication, sociology, psychology, marketing, management, and information systems have incorporated the principles of expectation confirmation and disconfirmation. These theories examine whether individuals' experiences align with their expectations and how this alignment affects overall satisfaction.</p>
+        <p>Expectancy Violations Theory (EVT) introduces the concept of "valence," which refers to the intrinsic attractiveness (positive valence) or aversiveness (negative valence) of an entity, incident, or situation. Valence is associated with both the entity (the "violator") and the entity's communication. EVT suggests that when a violation of expectations occurs, individuals engage in a dual appraisal process, interpreting and evaluating the communication act itself. Violations prompt a shift in attention towards the violation, intensifying the awareness of the violator's reward valence. The valence of the violator can influence how individuals interpret and evaluate the violation.</p>
+
+        <h3 class="sub" id="t4-s1">Positive and Negative Violations</h3>
+        <p>EVT categorizes violations into positive and negative types. A positive violation occurs when communication exceeds the target's expectations favorably. For instance, when the communication is better than expected, it is considered a positive violation. Negative violations, on the other hand, involve undesirable, unexpected acts that are worse than expected. The article suggests that positive violations often lead to more favorable outcomes compared to positive confirmations, whereas negative violations lead to unfavorable outcomes even when the expectancy confirmation is negative.</p>
+
+        <h3 class="sub" id="t4-s2">Tolerance Levels</h3>
+        <p>Communication expectations are not fixed but rather exist within a range or tolerance level. This range can include both positively valenced and negatively valenced expected behaviors.</p>
+        <p>Evaluations of behaviors and interactions have tangible outcomes. These outcomes can affect various aspects, including performance, trust, partner influence, perceived understanding, and future interaction intentions. Negatively valenced violations are expected to decrease these outcomes relative to confirming expectations, while positively valenced violations should enhance these outcomes relative to conforming to expectations.</p>
+      </section>
+
+      <hr class="div">
+
+      <!-- ===== 05 ===== -->
+      <section class="theory" id="t5">
+        <div class="theory__head">
+          <span class="theory__num">05 / SIX THEORIES</span>
+          <h2 class="theory__title">Inoculation Theory</h2>
+        </div>
+        <p>Inoculation Theory is a persuasive communication theory introduced by William J. McGuire in 1964. This theory provides us with valuable insights into how individuals can resist persuasive messages and remain steadfast in their beliefs, attitudes, or opinions.</p>
+
+        <h3 class="sub" id="t5-s1">A Medical Analogy</h3>
+        <p>McGuire originally explained his Inoculation Theory by drawing a parallel with a medical analogy. Imagine getting a flu shot. The flu shot injects a weakened version of the influenza virus into your body, which is too weak to cause the flu but strong enough to trigger your immune system to produce antibodies for protection. In Inoculation Theory, persuasion works similarly to medical inoculation. Instead of viruses, we deal with persuasive messages. Pretreatment messages serve as weakened versions of counterarguments, designed not to persuade but to activate protective responses. Just as your body produces antibodies when threatened by the flu virus, individuals generate refutations to counterarguments when faced with a persuasive threat. So, resistance in persuasion occurs because of these protective responses, much like how our bodies protect against future infections.</p>
+
+        <h3 class="sub" id="t5-s2">Two-Sided Messages</h3>
+        <p>In Inoculation Theory, the prototypical pretreatment is a two-sided message, often referred to as a refutational pretreatment, as opposed to one-sided or supportive pretreatments. In our medical analogy, a supportive pretreatment could be compared to taking vitamins to boost your health before any threat. In contrast, refutational pretreatments introduce persuasive challenges, like counterarguments, which challenge existing beliefs. These counterarguments are weakened by refutations, just as weakened viruses are used in medical inoculations.</p>
+
+        <h3 class="sub" id="t5-s3">Research Experiments</h3>
+        <p>To test the effectiveness of Inoculation Theory, McGuire and his colleagues conducted experiments in the early 1960s. They compared the resistance conferred by refutational pretreatments to other pretreatments, or even no pretreatments at all. Refutational pretreatments consistently proved superior in conferring resistance to subsequent challenges.</p>
+
+        <h3 class="sub" id="t5-s4">Demonstrating Resistance</h3>
+        <p>Demonstrating resistance in inoculation studies requires a somewhat inverted logic. To assess resistance, you first need to confirm that the attack message used is persuasive. Then, the key question becomes whether a pretreatment rendered the attack less persuasive. Researchers use a common design where all participants are exposed to an attack message, but only some receive pretreatment messages before the attack. This design helps evaluate the persuasiveness of the attack and whether the pretreatment mitigated it.</p>
+
+        <h3 class="sub" id="t5-s5">Types of Pretreatments</h3>
+        <p>Inoculation is not limited to refuting the same arguments used in the attack. McGuire and his colleagues compared two types of refutational pretreatments: refutational-same and refutational-different. Refutational-same raises and refutes the same arguments used in the attack, while refutational-different raises and refutes novel arguments not present in the attack. Both approaches confer resistance, expanding the scope of Inoculation Theory.</p>
+
+        <h3 class="sub" id="t5-s6">Early Challenges and Developments</h3>
+        <p>Early challenges to Inoculation Theory included a lack of empirical confirmation of how it conferred resistance and its restricted use with cultural truisms, which are widely accepted beliefs. However, later researchers like Pryor and Steinfatt challenged these restrictions, suggesting that inoculation could apply to controversial issues as long as new counterarguments were introduced in the pretreatment.</p>
+
+        <h3 class="sub" id="t5-s7">Applications of Inoculation Theory</h3>
+        <p>Inoculation Theory has found applications in various domains, including health, politics, and commerce:</p>
+        <p class="lede"><strong>Health:</strong> Inoculation has been used effectively in antismoking campaigns, helping individuals resist pressure to smoke. It has also been applied to combat alcohol influences and promote condom use among college students.</p>
+        <p class="lede"><strong>Politics:</strong> Inoculation has become a valuable strategy in political campaigns. It preempts attacks on candidates' image and positions, boosts voter engagement, and protects against the stifling effect of the "spiral of silence."</p>
+        <p class="lede"><strong>Commerce:</strong> Inoculation informs corporate communication and public relations, helping employees identify with organizations and protecting corporate image during crises. It can also be used to counteract marketing efforts that aim to persuade consumers.</p>
+
+        <h3 class="sub" id="t5-s8">Contemporary Issues and Developments</h3>
+        <p>While Inoculation Theory has stood the test of time, contemporary research has revealed new insights and challenges:</p>
+        <p class="lede"><strong>Moderators:</strong> Factors like pre-attitude, perceived involvement, and self-efficacy influence how Inoculation Theory works. Pre-attitude, the presence and valence of existing attitudes, is crucial for successful inoculation. Perceived involvement and self-efficacy can moderate the effects of inoculation, with moderate levels being most conducive to resistance.</p>
+        <p class="lede"><strong>Mediators:</strong> Threat and counterarguing have long been seen as central mediators in Inoculation Theory. Threat is the perception of vulnerability, while counterarguing is the process of generating and refuting arguments. Recent research has explored affect (emotions) as a mediator, particularly anger, as well as the influence of perceived involvement and self-efficacy on the process of inoculation.</p>
+        <p class="lede"><strong>New Insights:</strong> Researchers have been striving to enhance the understanding of Inoculation Theory by experimenting with different aspects, such as language intensity, affect triggers, and reactance (anger) appeals. These studies have illuminated how emotions and feelings play significant roles in the process.</p>
+        <p class="lede"><strong>Challenges and Future Directions:</strong> While Inoculation Theory has been successful, some challenges remain, such as the optimal timing of booster sessions and understanding the interactions between affect, involvement, and self-efficacy in the inoculation process.</p>
+      </section>
+
+      <hr class="div">
+
+      <!-- ===== 06 ===== -->
+      <section class="theory" id="t6">
+        <div class="theory__head">
+          <span class="theory__num">06 / SIX THEORIES</span>
+          <h2 class="theory__title">Elaboration Likelihood Model (ELM)</h2>
+        </div>
+        <p>The study of attitudes and persuasion has a rich history within social psychology. It dates back to the early days of the discipline when researchers began to explore the fascinating world of how people form opinions and are influenced by others. In fact, attitudes were once considered one of the most crucial topics in psychology.</p>
+        <p>ELM was the brainchild of Richard Petty and John Cacioppo, graduate students at Ohio State University in the mid-1970s. Initially, Petty's research focused on why some attitude changes persisted over time while others were fleeting. He speculated that the persistence of attitude change depended on whether it was produced thoughtfully or with little thinking.</p>
+
+        <h3 class="sub" id="t6-s1">The Two Routes to Persuasion</h3>
+        <p>This concept laid the foundation for what would become the ELM, which introduced the idea of two routes to persuasion: a thoughtful route and a less thoughtful one. The theory proposed that the way people process information when forming or changing their attitudes plays a significant role in the persistence of those attitudes.</p>
+        <p>As Petty and Cacioppo continued their collaboration, their theory evolved. They were influenced by the "cognitive response" approach to attitude change proposed by Tony Greenwald. The ELM integrated both high-elaboration and low-elaboration mechanisms of persuasion, providing a more comprehensive understanding of how attitudes are formed and changed.</p>
+        <p>The ELM emerged as a response to the complexities and contradictions in early persuasion research. It aimed to provide a framework that could make sense of past findings and generate new predictions.</p>
+
+        <h3 class="sub" id="t6-s2">The Elaboration Continuum: From Low to High Thought</h3>
+        <p>The ELM begins by highlighting a fundamental concept: persuasion can occur with varying degrees of thought. Think of it as an "elaboration continuum." On one end, we have low elaboration, where people don't put much thought into changing their attitudes. On the other end, we have high elaboration, where people carefully consider and think deeply about the issues at hand.</p>
+        <p>The ELM doesn't stop at the continuum concept. It tells us that various processes of change operate along this spectrum. Some processes, like classical conditioning and mere exposure, require minimal thought and fall on the low end of the continuum. Others, such as expectancy-value and cognitive response models, demand high degrees of thought and operate at the upper end. When persuasion relies on processes at the low end, we call it the peripheral route. When high-end processes shape persuasion, it's known as the central route. Often, persuasion is a blend of these processes.</p>
+        <p>Here's the third core idea: the degree of thought matters. How much thought goes into forming a judgment determines its significance. When a judgment is rooted in careful thinking about an issue, it tends to stick around, resist change, and influence other judgments and behaviors. In essence, the more thought you put into something, the more impactful it becomes.</p>
+
+        <h3 class="sub" id="t6-s3">Organizing Processes Along the Continuum</h3>
+        <p>Now, let's get practical. The fourth core idea of the ELM is incredibly useful. It helps us organize the various processes by which different factors can influence attitudes. For instance, factors like the attractiveness of the message source or a person's current emotions can influence how much thought someone puts into an issue, placing them somewhere along the elaboration continuum.</p>
+        <p>Imagine you're trying to persuade someone. If that person is already leaning towards low thought (low elaboration), certain variables can act as simple cues. These cues nudge attitudes in a direction that aligns with their valence. For example, an attractive source or a positive emotion can lead to more positive persuasion outcomes. On the flip side, when someone is thinking deeply about an issue (high elaboration), these variables take on different roles. First, they can be examined as arguments (is source being attractive relevant to the merit of the actual argument). Second, they can influence the valence of thoughts that come to mind. An attractive source or a good mood can make positive thoughts more likely.</p>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<button class="toggle" id="toggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+  <svg id="ticon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+</button>
+
+<script>
+(function () {
+  // ---------- scroll-spy ----------
+  var items = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+  var theories = items.map(function (it) {
+    return {
+      el: it,
+      id: it.getAttribute('data-theory'),
+      section: document.getElementById(it.getAttribute('data-theory')),
+      sublinks: Array.prototype.slice.call(it.querySelectorAll('.subnav a'))
+    };
+  });
+
+  // map every subhead + theory heading -> its nav sublink (if any) and owning theory
+  var subHeads = Array.prototype.slice.call(document.querySelectorAll('.theory, h3.sub'));
+
+  function setActiveTheory(id) {
+    theories.forEach(function (t) {
+      t.el.classList.toggle('active', t.id === id);
+    });
+  }
+  function setCurrentSub(hash) {
+    document.querySelectorAll('.subnav a.current').forEach(function (a) { a.classList.remove('current'); });
+    if (!hash) return;
+    var link = document.querySelector('.subnav a[href="' + hash + '"]');
+    if (link) link.classList.add('current');
+  }
+
+  var visible = new Map();
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible.set(e.target, e.boundingClientRect.top);
+      else visible.delete(e.target);
+    });
+    // choose the topmost visible heading
+    var best = null, bestTop = Infinity;
+    visible.forEach(function (top, el) {
+      var t = el.getBoundingClientRect().top;
+      if (t < bestTop) { bestTop = t; best = el; }
+    });
+    if (!best) return;
+
+    var section = best.closest ? best.closest('.theory') : null;
+    if (best.classList.contains('theory')) section = best;
+    if (section) setActiveTheory(section.id);
+
+    if (best.tagName === 'H3' && best.id) setCurrentSub('#' + best.id);
+    else setCurrentSub(null);
+  }, { rootMargin: '-12% 0px -70% 0px', threshold: 0 });
+
+  subHeads.forEach(function (el) { io.observe(el); });
+
+  // default active on load
+  setActiveTheory('t1');
+
+  // smooth-scroll for nav clicks (offset handled by scroll-margin)
+  document.querySelectorAll('#nav a, .toggle').forEach(function () {});
+  document.getElementById('nav').addEventListener('click', function (ev) {
+    var a = ev.target.closest('a');
+    if (!a) return;
+    var id = a.getAttribute('href');
+    if (id && id.charAt(0) === '#') {
+      var target = document.querySelector(id);
+      if (target) {
+        ev.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', id);
+      }
+    }
+  });
+
+  // ---------- theme toggle ----------
+  var root = document.documentElement;
+  var btn = document.getElementById('toggle');
+  var sun = '<circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>';
+  var moon = '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.2 6.2 0 0 0 10.5 10.5z"></path>';
+  function currentIsDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function paintIcon() {
+    document.getElementById('ticon').innerHTML = currentIsDark() ? sun : moon;
+  }
+  paintIcon();
+  btn.addEventListener('click', function () {
+    root.setAttribute('data-theme', currentIsDark() ? 'light' : 'dark');
+    paintIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
 
